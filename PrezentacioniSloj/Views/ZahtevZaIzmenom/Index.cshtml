@@ -1,0 +1,333 @@
+﻿@model IEnumerable<PrezentacioniSloj.ViewModels.ZahtevZaIzmenomViewModel>
+
+@{
+    ViewBag.Title = "Листа захтева";
+    Layout = "~/Views/Layouti/_IndexLayout.cshtml";
+
+    var listaStatusa = new SelectList(new[] {
+        "На чекању",
+        "Одобрен",
+        "Одбијен",
+        "У реализацији",
+        "Реализован"
+    }, Request.QueryString["statusFilter"]);
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+<style>
+    /* Ресетовање body-ја и постављање слике преко целог екрана */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+    }
+
+    body {
+        background-image: url('/Content/Slike/pozadina2.png') !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: fixed !important;
+        background-repeat: no-repeat !important;
+    }
+
+    /* Уклањање ограничавајућих маргина из Bootstrap / ASP.NET Layout контејнера */
+    .body-content, .container, .container-fluid {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Омотач странице */
+    .omotac-stranice {
+        min-height: 100vh;
+        padding: 40px 20px;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        box-sizing: border-box;
+    }
+
+    /* Главни наслов */
+    .naslov-stranice {
+        text-align: center;
+        font-size: 3.8rem;
+        font-weight: 700;
+        color: #2b3a4a;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    /* Трака за претрагу (Pill) */
+    .kontejner-pretrage {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .zaobljena-pretraga {
+        display: flex;
+        align-items: center;
+        background-color: #3b76a6;
+        border-radius: 50px;
+        padding: 5px 25px;
+        width: 100%;
+        max-width: 550px;
+        border: 3px solid #b3d4f0;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2), inset 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+        .zaobljena-pretraga input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            outline: none;
+            flex: 1; /* Попуњава сав слободан простор са леве стране */
+            max-width: none; /* Спречава Bootstrap да ограничи ширину поља */
+        }
+
+            .zaobljena-pretraga input::placeholder {
+                color: #c9e1f5;
+            }
+
+        .zaobljena-pretraga button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-left: auto; /* Помера иконицу скроз уз десну ивицу */
+            padding-left: 10px;
+        }
+
+    /* Контејнер табеле (Стаклени ефекат) */
+    .kartica-tabele {
+        background-color: rgba(155, 185, 215, 0.65);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        max-width: 1150px;
+        width: 100%; /* ДОДАТО: Осигурава да је картица увек максимално широка */
+        box-sizing: border-box; /* ДОДАТО: Спречава да padding рашири преко 100% */
+        margin: 0 auto;
+    }
+
+    /* Контролни ред */
+    .red-kontrola {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .padajuca-lista-statusa {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 8px 15px;
+        width: 220px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .glavno-dugme {
+        background-color: #3b76a6;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 20px;
+        border: none;
+        text-decoration: none;
+        font-weight: 500;
+        margin-left: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: inline-block;
+    }
+
+        .glavno-dugme:hover {
+            background-color: #2f5f86;
+            color: white;
+        }
+
+    /* Табела */
+    .prilagodjena-tabela {
+        background-color: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        overflow: hidden;
+        width: 100%;
+        /*table-layout: fixed; <-- ОБРИСАНО */
+        border-collapse: collapse;
+    }
+
+        .prilagodjena-tabela thead {
+            background-color: #e6f0fa;
+            border-bottom: 2px solid #a7c6e6;
+        }
+
+        .prilagodjena-tabela th, .prilagodjena-tabela td {
+            padding: 12px 15px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+            vertical-align: middle;
+            /* white-space: nowrap; <-- ОБРИСАНО */
+            word-break: break-word; /* ДОДАТО: Омогућава прелом дугачких речи у нови ред */
+        }
+
+    /* Дугмићи у табели */
+    .grupa-akcija {
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .akciono-dugme {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 55px;
+        height: 50px;
+        border-radius: 6px;
+        color: white;
+        text-decoration: none;
+        font-size: 0.65rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .akciono-dugme i {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+    .dugme-izmeni {
+        background-color: #728fa5;
+    }
+
+    .dugme-detalji {
+        background-color: #5d9cec;
+    }
+
+    .dugme-stampaj {
+        background-color: #3b76a6;
+    }
+
+    .dugme-obrisi {
+        background-color: #da4453;
+    }
+
+    .akciono-dugme:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+    @@media print {
+        body {
+            background: none !important;
+        }
+
+        .omotac-stranice {
+            padding: 0;
+        }
+
+        .kontejner-pretrage, .red-kontrola, th:last-child, td:last-child {
+            display: none !important;
+        }
+
+        .kartica-tabele {
+            box-shadow: none;
+            border: none;
+            background: none;
+        }
+    }
+</style>
+
+<div class="omotac-stranice">
+    <h1 class="naslov-stranice">Листа захтева</h1>
+
+    @using (Html.BeginForm("Index", "ZahtevZaIzmenom", FormMethod.Get))
+    {
+        <div class="kontejner-pretrage">
+            <div class="zaobljena-pretraga">
+                @Html.TextBox("brojZahtevaFilter", Request.QueryString["brojZahtevaFilter"], new { placeholder = "Унесите број захтева" })
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="kartica-tabele">
+            <div class="red-kontrola">
+                <div>
+                    @Html.DropDownList("statusFilter", listaStatusa, "Сви статуси", new { @class = "padajuca-lista-statusa", onchange = "this.form.submit();" })
+                </div>
+
+                <div>
+                    <button type="button" onclick="window.print()" class="glavno-dugme">Штампа листу</button>
+                    <a href="@Url.Action("Kreiraj", "ZahtevZaIzmenom")" class="glavno-dugme">+ Нови захтев</a>
+                </div>
+            </div>
+
+            <table class="prilagodjena-tabela">
+                <thead>
+                    <tr>
+                        <th>Број захтева</th>
+                        <th>Пројекат</th>
+                        <th>Клијент</th>
+                        <th>Датум</th>
+                        <th>Статус</th>
+                        <th>Акције</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.BrojZahteva</td>
+                                <td>@item.NazivProjekta</td>
+                                <td>@item.NazivKlijenta</td>
+                                <td>@item.DatumPodnosenja.ToString("d.M.yyyy")</td>
+                                <td><strong>@item.Status</strong></td>
+                                <td>
+                                    <div class="grupa-akcija">
+                                        <a href="@Url.Action("Izmeni", new { id = item.Id })" class="akciono-dugme dugme-izmeni">
+                                            <i class="fas fa-pen"></i>Измени
+                                        </a>
+                                        <a href="@Url.Action("Detalji", new { id = item.Id })" class="akciono-dugme dugme-detalji">
+                                            <i class="fas fa-info-circle"></i>Детаљи
+                                        </a>
+                                        <a href="@Url.Action("Stampaj", new { id = item.Id })" class="akciono-dugme dugme-stampaj" target="_blank">
+                                            <i class="fas fa-print"></i>Штампај
+                                        </a>
+                                        <form action="@Url.Action("Obrisi", "ZahtevZaIzmenom", new { id = item.Id })" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="akciono-dugme dugme-obrisi" onclick="return confirm('Да ли сте сигурни да желите да обришете овај захтев?');">
+                                                <i class="fas fa-trash"></i>Обриши
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="padding: 30px; text-align: center; color: #666;">
+                                Нема пронађених захтева.
+                            </td>
+                        </tr>
+                        <tr><td colspan="6">&nbsp;</td></tr>
+                        <tr><td colspan="6">&nbsp;</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

@@ -1,0 +1,337 @@
+﻿@model PrezentacioniSloj.ViewModels.KreiranjeZahtevaViewModel
+@{
+    // Искључујемо стандардни layout
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8" />
+    <title>Штампа - CRF Образац</title>
+    <style>
+        /* OSNOVNA PODEŠAVANJA TELA */
+        body {
+            background: #525659;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .stranica {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+            color: black;
+        }
+
+        /* STILIZACIJA TABELE */
+        .crf-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+            /* PLAVE IVICE ZA SVA POLJA */
+            .crf-tabela th, .crf-tabela td {
+                border: 1px solid #3b73b9;
+                padding: 8px 10px;
+                vertical-align: middle;
+            }
+
+        /* GLAVNO ZAGLAVLJE (Tamno plavo) */
+        .glavno-zaglavlje {
+            background-color: #3b73b9;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            padding: 15px;
+        }
+
+            .glavno-zaglavlje .naziv-kompanije {
+                font-weight: normal;
+                font-size: 19px;
+                margin-bottom: 5px;
+            }
+
+            .glavno-zaglavlje .naslov {
+                font-size: 18px;
+            }
+
+        /* NASLOVI SEKCIJA (Svetlo plavo)*/
+        .zaglavlje-sekcije {
+            background-color: #EBF3FB;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* PODNASLOV TABELE ZA STAVKE (Tamno plavo) */
+        .plavi-podnaslov {
+            background-color: #3b73b9;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* RED ZA ZBIR (Žuto) */
+        .zuti-red-ukupno {
+            background-color: #fff2cc;
+            font-weight: bold;
+        }
+
+        .podebljani-tekst {
+            font-weight: bold;
+        }
+
+        .tekst-vrh {
+            vertical-align: top;
+        }
+
+        /* Linije za ručni unos (kad nema podataka) */
+        .linija-za-pisanje {
+            border-bottom: 1px solid #000;
+            height: 25px;
+            margin-top: 5px;
+            width: 70%;
+        }
+
+        .linija-za-pisanje-u-redu {
+            display: inline-block;
+            border-bottom: 1px solid #000;
+            width: 90%;
+            margin-left: 5px;
+        }
+
+        /* KONTROLE NA EKRANU */
+        .kontrole {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dugme {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #3b76a6;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+
+        .dugme-sekundarno {
+            background: #6c757d;
+        }
+
+        @@media print {
+            @@page {
+                size: auto;
+                margin: 0; /* Uklanja podrazumevano zaglavlje i podnožje pregledača */
+            }
+
+            body {
+                background: white;
+                margin: 0;
+                padding: 15mm; /* Premešten padding na body da bi papir zadržao margine */
+            }
+
+            .stranica {
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                width: 100%;
+                min-height: auto;
+                border: none;
+            }
+
+            .bez-stampe {
+                display: none !important;
+            }
+            /* Forsira pretraživač da štampa pozadinske boje */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="kontrole bez-stampe">
+        <button class="dugme" onclick="window.print()">Штампај документ</button>
+    </div>
+
+    <div class="stranica">
+        <table class="crf-tabela">
+            <colgroup>
+                <!-- Delimo tabelu na 4 jednake kolone po 25% -->
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+            </colgroup>
+
+            <!-- ZAGLAVLJE DOKUMENTA -->
+            <tr>
+                <td colspan="4" class="glavno-zaglavlje">
+                    <div class="naziv-kompanije">@Model.Zahtev.NazivKlijenta</div>
+                    <div class="naslov">ОБРАЗАЦ ЗАХТЕВА ЗА ИЗМЕНОМ (CRF)</div>
+                </td>
+            </tr>
+
+            <!-- META PODACI -->
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Број захтева:</td>
+                <td colspan="2" class="zaglavlje-sekcije">Датум подношења:</td>
+            </tr>
+            <tr>
+                <td colspan="2">@(Model?.Zahtev?.BrojZahteva ?? "___")</td>
+                <td colspan="2">@(Model?.Zahtev?.DatumPodnosenja.ToString("dd.MM.yyyy") ?? "")</td>
+            </tr>
+
+            <!-- SEKCIJA 1 -->
+            <tr>
+                <td colspan="4" class="zaglavlje-sekcije">1. ОСНОВНИ ПОДАЦИ О ПРОЈЕКТУ И КЛИЈЕНТУ (MASTER)</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Назив пројекта:</td>
+                <td colspan="2">@(Model?.Zahtev?.NazivProjekta ?? "")</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Назив клијента:</td>
+                <td colspan="2">@(Model?.Zahtev?.NazivKlijenta ?? "_________________")</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Захтев поднео:</td>
+                <td colspan="2">@(Model?.Zahtev?.ZahtevPodneo ?? "")</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Статус:</td>
+                <td colspan="2">@(Model?.Zahtev?.Status ?? "[ На чекању / Одобрен / Одбијен / У реализацији / Реализован ]")</td>
+            </tr>
+
+            <!-- SEKCIJA 2 -->
+            <tr>
+                <td colspan="4" class="zaglavlje-sekcije">2. ОПИС ЗАХТЕВАНЕ ИЗМЕНЕ</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="tekst-vrh" style="height: 110px;">
+                    <div class="podebljani-tekst" style="margin-bottom: 5px;">Детаљан опис шта се мења:</div>
+                    @if (string.IsNullOrWhiteSpace(Model?.Zahtev?.DetaljanOpis))
+                    {
+                        <div class="linija-za-pisanje"></div>
+                        <div class="linija-za-pisanje"></div>
+                        <div class="linija-za-pisanje"></div>
+                    }
+                    else
+                    {
+                        <div>@Html.Raw(Model.Zahtev.DetaljanOpis)</div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="tekst-vrh" style="height: 90px;">
+                    <div class="podebljani-tekst" style="margin-bottom: 5px;">Пословни разлог за измену:</div>
+                    @if (string.IsNullOrWhiteSpace(Model?.Zahtev?.PoslovniRazlog))
+                    {
+                        <div class="linija-za-pisanje"></div>
+                        <div class="linija-za-pisanje"></div>
+                    }
+                    else
+                    {
+                        <div>@Html.Raw(Model.Zahtev.PoslovniRazlog)</div>
+                    }
+                </td>
+            </tr>
+
+            <!-- SEKCIJA 3 (NOVI DIZAJN KAO NA SLICI 1) -->
+            <tr>
+                <td colspan="4" class="zaglavlje-sekcije">3. ПРОЦЕНА РАДОВА И ТРОШКОВА (DETAIL – СТАВКЕ ИЗМЕНЕ)</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="plavi-podnaslov tekst-vrh">Фаза / Врста посла (нпр. UI, База, Тестирање)</td>
+                <td colspan="1" class="plavi-podnaslov tekst-vrh" style="text-align: center;">Сати (h)</td>
+            </tr>
+            @{ decimal ukupnoSati = 0; }
+            @if (Model != null && Model.Stavke != null && Model.Stavke.Count > 0)
+            {
+                int redniBroj = 1;
+                foreach (var stavka in Model.Stavke)
+                {
+                    ukupnoSati += stavka.ProcenjenoSati;
+                    <tr>
+                        <td colspan="3">@redniBroj. @stavka.FazaIliVrstaPosla</td>
+                        <td colspan="1" style="text-align: center;">@stavka.ProcenjenoSati h</td>
+                    </tr>
+                    redniBroj++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">1. <div class="linija-za-pisanje-u-redu"></div></td>
+                    <td colspan="1" style="text-align: center;">______ h</td>
+                </tr>
+                <tr>
+                    <td colspan="3">2. <div class="linija-za-pisanje-u-redu"></div></td>
+                    <td colspan="1" style="text-align: center;">______ h</td>
+                </tr>
+                <tr>
+                    <td colspan="3">3. <div class="linija-za-pisanje-u-redu"></div></td>
+                    <td colspan="1" style="text-align: center;">______ h</td>
+                </tr>
+                <tr>
+                    <td colspan="3">4. <div class="linija-za-pisanje-u-redu"></div></td>
+                    <td colspan="1" style="text-align: center;">______ h</td>
+                </tr>
+            }
+            <tr class="zuti-red-ukupno">
+                <td colspan="3">УКУПНО ПРОЦЕЊЕНО ВРЕМЕ (сати) – аутоматски израчунато:</td>
+                <td colspan="1" style="text-align: center;">@(ukupnoSati > 0 ? ukupnoSati.ToString() + " h" : "______ h")</td>
+            </tr>
+
+            <!-- SEKCIJA 4 -->
+            <tr>
+                <td colspan="4" class="zaglavlje-sekcije">4. УТИЦАЈ НА ПРОЈЕКАТ И ОДОБРЕЊА</td>
+            </tr>
+
+            <tr>
+                <!-- Лева ћелија са плавом позадином и центрираним текстом -->
+                <td colspan="2" class="zaglavlje-sekcije" style="vertical-align: middle;">
+                    Утицај на уговорени рок:
+                </td>
+
+                <!-- Десна ћелија са датумом испоруке -->
+                <td colspan="2" class="tekst-vrh" style="padding-bottom: 20px; padding-top: 15px;">
+                    @(Model?.Zahtev?.NoviDatumIsporuke?.ToString("dd.MM.yyyy") ?? "__________________")
+                </td>
+            </tr>
+
+            <!-- ПОТВРДА МЕНАЏЕРА -->
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije" style="vertical-align: middle;">Потврда менаџера пројекта:</td>
+                <td colspan="2" style="vertical-align: middle;">@(Model?.Zahtev?.PotvrdaMenadzera == true ? "Одобрено" : "[ попуњава се ако укупни сати > X ]")</td>
+            </tr>
+
+            <!-- НАСЛОВИ ЗА ПОТПИСЕ (ПЛАВА ПОЗАДИНА) -->
+            <tr>
+                <td colspan="2" class="zaglavlje-sekcije">Потпис клијента:</td>
+                <td colspan="2" class="zaglavlje-sekcije">Потпис руководиоца пројекта:</td>
+            </tr>
+
+            <!-- ПРОСТОР ЗА ПОТПИС И ЛИНИЈЕ (БЕЛА ПОЗАДИНА) -->
+            <tr>
+                <td colspan="2" style="height: 60px; vertical-align: bottom; padding-bottom: 10px;">
+                    <div style="border-bottom: 1px solid black; width: 85%;"></div>
+                </td>
+                <td colspan="2" style="height: 60px; vertical-align: bottom; padding-bottom: 10px;">
+                    <div style="border-bottom: 1px solid black; width: 85%;"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

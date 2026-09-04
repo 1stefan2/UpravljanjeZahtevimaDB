@@ -1,0 +1,263 @@
+﻿@model PrezentacioniSloj.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Пријава на систем";
+    Layout = "~/Views/Layouti/_LoginLayout.cshtml";
+}
+
+<div class="kontejner-za-prijavu">
+    <div class="kartica-za-prijavu">
+        <!-- LOGO IKONICA -->
+        <div class="omotac-loga">
+            <img src="@Url.Content("/Content/Slike/logo.png")" alt="ЦРФ Лого" class="logo-prijave" />
+        </div>
+
+        <!-- NASLOV I PODNASLOV -->
+        <h2 class="naslov-prijave">Један корак до коришћења</h2>
+        <p class="podnaslov-prijave">унесите ваше податке</p>
+
+        @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "forma-prijave" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3 text-center small" })
+
+            <!-- KORISNIČKO IME -->
+            <div class="form-group mb-3 text-start">
+                <label class="form-label prilagodjena-labela">Корисничко име</label>
+                <div class="omotac-polja">
+                    <svg class="ikonica-polja leva-ikonica" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    @Html.TextBoxFor(m => m.KorisnickoIme, new { @class = "form-control prilagodjeni-unos sa-levom-ikonicom", placeholder = "Корисничко име" })
+                </div>
+                @Html.ValidationMessageFor(m => m.KorisnickoIme, "", new { @class = "text-danger small" })
+            </div>
+
+            <!-- LOZINKA -->
+            <div class="form-group mb-4 text-start">
+                <label class="form-label prilagodjena-labela">Лозинка</label>
+                <div class="omotac-polja">
+                    <svg class="ikonica-polja leva-ikonica" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    @Html.PasswordFor(m => m.Lozinka, new { @class = "form-control prilagodjeni-unos sa-levom-ikonicom sa-desnom-ikonicom", id = "polje-lozinke", placeholder = "••••••••••" })
+
+                    <!-- DUGME ZA PRIKAZ/SKRIVANJE LOZINKE -->
+                    <button type="button" class="dugme-za-prikaz-lozinke" onclick="promeniPrikazLozinke()">
+                        <svg class="ikonica-polja desna-ikonica" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                @Html.ValidationMessageFor(m => m.Lozinka, "", new { @class = "text-danger small" })
+            </div>
+
+            <!-- SUBMIT DUGME -->
+            <button type="submit" class="btn dugme-za-slanje">Пријави се</button>
+
+            <!-- ZABORAVILI STE LOZINKU -->
+            <div class="text-center mt-3">
+                <a href="#" class="veza-zaboravljena-lozinka">Заборавили сте лозинку?</a>
+            </div>
+
+            <div class="text-center mt-2">
+                <a href="@Url.Action("Index", "Pocetna")" class="veza-zaboravljena-lozinka" style="font-size: 0.8rem; opacity: 0.8;">Повратак на почетну страницу</a>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .kontejner-za-prijavu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('/Content/Images/Pozadina2.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        z-index: 9999;
+    }
+
+    .kartica-za-prijavu {
+        background: rgba(230, 240, 250, 0.45);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 22px;
+        padding: 40px 35px;
+        width: 100%;
+        max-width: 380px;
+        box-shadow: 0 20px 40px rgba(10, 35, 70, 0.2);
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .omotac-loga {
+        margin-bottom: 12px;
+    }
+
+    .logo-prijave {
+        height: 65px;
+        width: auto;
+    }
+
+    .naslov-prijave {
+        font-size: 1.35rem;
+        color: #111d2e;
+        font-weight: 600;
+        margin: 0 0 4px 0;
+    }
+
+    .podnaslov-prijave {
+        font-size: 0.85rem;
+        color: #3b4c63;
+        margin: 0 0 22px 0;
+        font-weight: 400;
+    }
+
+    .prilagodjena-labela {
+        font-size: 0.8rem;
+        color: #1b283d;
+        margin-bottom: 5px;
+        display: block;
+        font-weight: 600;
+    }
+
+    .omotac-polja {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+
+    .prilagodjeni-unos {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.8);
+        color: #1a273b;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .prilagodjeni-unos.sa-levom-ikonicom {
+            padding-left: 40px;
+        }
+
+        .prilagodjeni-unos.sa-desnom-ikonicom {
+            padding-right: 42px;
+        }
+
+        .prilagodjeni-unos:focus {
+            border-color: #184c8a;
+            box-shadow: 0 0 0 3px rgba(24, 76, 138, 0.15);
+            outline: none;
+            background: #ffffff;
+        }
+
+    .ikonica-polja {
+        width: 18px;
+        height: 18px;
+        color: #617798;
+    }
+
+    .leva-ikonica {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .dugme-za-prikaz-lozinke {
+        position: absolute;
+        right: 32px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+
+        .dugme-za-prikaz-lozinke .ikonica-polja {
+            position: static;
+            transform: none;
+            pointer-events: auto;
+        }
+
+    .dugme-za-slanje {
+        background-color: #16467d;
+        color: #ffffff;
+        border: none;
+        border-radius: 22px;
+        width: 100%;
+        padding: 11px;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-top: 8px;
+        cursor: pointer;
+        transition: background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+        box-shadow: 0 4px 12px rgba(22, 70, 125, 0.25);
+    }
+
+        .dugme-za-slanje:hover {
+            background-color: #0f3460;
+            color: #ffffff;
+            box-shadow: 0 6px 15px rgba(22, 70, 125, 0.35);
+        }
+
+        .dugme-za-slanje:active {
+            transform: scale(0.99);
+        }
+
+    .veza-zaboravljena-lozinka {
+        color: #16467d;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: opacity 0.2s;
+    }
+
+        .veza-zaboravljena-lozinka:hover {
+            text-decoration: underline;
+            color: #0f3460;
+        }
+</style>
+
+<!-- SKRIPTA ZA PRIKAZ/SKRIVANJE LOZINKE -->
+<script>
+    function promeniPrikazLozinke() {
+        var polje = document.getElementById("polje-lozinke");
+        if (polje.type === "password") {
+            polje.type = "text";
+        } else {
+            polje.type = "password";
+        }
+    }
+</script>

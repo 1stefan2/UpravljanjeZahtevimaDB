@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ЦРФ Систем</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #bae0ff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .custom-navbar {
+            background-color: #92c5fd !important;
+            padding: 15px 50px;
+        }
+
+        .nav-link-custom {
+            color: #000000 !important;
+            font-size: 1.25rem; /* Povećan font linkova */
+            font-weight: 400; /* STANJENO: Bilo je 500, sada je normal (Regular) */
+            margin: 0 18px; /* Malo širi razmak između linkova */
+        }
+
+        .btn-prijava {
+            background-color: #0C74D3; /* KORIGOVANA BOJA: Ozbiljnija plava kao na dizajnu */
+            color: white !important;
+            border-radius: 6px;
+            padding: 8px 30px !important; /* Šire dugme (više paddinga sa strane) */
+            font-size: 1.1rem; /* Usaglašena veličina fonta */
+            font-weight: 400; /* STANJENO: Uklonjen bold efekat */
+            text-decoration: none;
+            border: none;
+        }
+
+            .btn-prijava:hover {
+                background-color: #155dbb;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm custom-navbar">
+        <div class="container-fluid p-0">
+
+            <!-- LOGO I NAZIV -->
+            <!-- PROMENA: Uklonjene Bootstrap klase 'font-weight-bold' i 'fw-bold', dodato style="font-weight: 400;" -->
+            <a class="navbar-brand d-flex align-items-center text-dark fs-4" style="font-weight: 400;" href="@Url.Action("Index", "Home")">
+
+                <!-- PROMENA: Povećana ikonica sa 40px na 50px i dodata veća margina desno (me-3 umesto me-2) -->
+                <img src="@Url.Content("~/Content/Slike/logo.png")" alt="ЦРФ Лого" class="me-3" style="height: 50px; width: auto;" />
+
+                <span>ЦРФ Систем</span>
+            </a>
+
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between">
+                <!-- SREDINA: LINKOVI -->
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        @Html.ActionLink("О софтверу", "About", "Home", null, new { @class = "nav-link nav-link-custom" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("О мени", "OMeni", "Home", null, new { @class = "nav-link nav-link-custom" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Контакт", "Kontakt", "Home", null, new { @class = "nav-link nav-link-custom" })
+                    </li>
+                    @if (Session["KorisnickoIme"] != null)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Захтеви за изменом", "Index", "ZahtevZaIzmenom", null, new { @class = "nav-link nav-link-custom text-primary font-weight-bold" })
+                        </li>
+                    }
+                </ul>
+
+                <!-- DESNO: PRIJAVA / ODJAVA -->
+                <ul class="navbar-nav">
+                    @if (Session["KorisnickoIme"] != null)
+                    {
+                        <li class="nav-item d-flex align-items-center">
+                            <span class="nav-link text-dark me-2">Здраво, <b>@Session["KorisnickoIme"]</b></span>
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Одјава", "Logout", "Auth", null, new { @class = "btn btn-danger px-3 ms-2" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Пријава", "Login", "Auth", null, new { @class = "nav-link btn-prijava" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sadrzaj ide preko celog ekrana -->
+    <main>
+        @RenderBody()
+    </main>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Build rezultati
+bin/
+obj/
+*.user
+*.suo
+
+# Visual Studio cache
+.vs/
+*.cache
+
+# NuGet paketi
+packages/
+
+# Log fajlovi
+*.log
+
+.vs/
+*.user
+packages/
+bin/
+obj/

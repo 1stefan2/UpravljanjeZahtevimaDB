@@ -1,0 +1,308 @@
+﻿@model PrezentacioniSloj.ViewModels.KreiranjeZahtevaViewModel
+
+@{
+    ViewBag.Title = "Детаљи захтева";
+    Layout = "~/Views/Layouti/_DetaljiLayout.cshtml"; // Prilagodite vašem layout-u
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Osnovna postavka pozadine */
+    html, body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
+
+    body {
+        background-image: url('/Content/Slike/Pozadina2.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #1c2b39;
+    }
+
+    /* Glavni kontejner */
+    .stakleni-kontejner {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    /* Naslov */
+    .omotac-naslova {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .naslov-stranice {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #11284b;
+        text-align: center;
+        flex-grow: 1;
+        margin: 0;
+        text-shadow: 0px 2px 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .stakleno-dugme-nazad {
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 20px;
+        padding: 8px 20px;
+        color: #11284b;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+        .stakleno-dugme-nazad:hover {
+            background: rgba(255, 255, 255, 0.7);
+            color: #000;
+        }
+
+    /* Stakleni paneli (Kartice) */
+    .stakleni-panel {
+        background: rgba(230, 240, 250, 0.45);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 25px 35px;
+        margin-bottom: 30px;
+    }
+
+    .zaglavlje-panela {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        padding-bottom: 10px;
+    }
+
+    /* Grid layout za formu */
+    .info-mreza {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 40px;
+        row-gap: 15px;
+    }
+
+    .info-grupa {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-oznaka {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 4px;
+    }
+
+    .info-vrednost {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.95rem;
+        color: #333;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .info-vrednost-velika {
+        min-height: 80px;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
+
+    /* Stilizacija tabele */
+    .staklena-tabela {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 10px;
+    }
+
+        .staklena-tabela th {
+            background: rgba(255, 255, 255, 0.3);
+            color: #4a5c6e;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+            .staklena-tabela th:last-child {
+                text-align: right;
+            }
+
+        .staklena-tabela td {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            color: #1c2b39;
+            font-size: 0.95rem;
+        }
+
+            .staklena-tabela td:last-child {
+                text-align: right;
+            }
+
+        .staklena-tabela tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .staklena-tabela tfoot td {
+            background: rgba(200, 220, 240, 0.5);
+            font-weight: 600;
+            border-top: 2px solid rgba(255, 255, 255, 0.8);
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+        }
+
+    /* Alert poruka */
+    .stakleno-obavestenje {
+        background: rgba(255, 255, 255, 0.5);
+        border-left: 4px solid #ff9800;
+        padding: 15px;
+        border-radius: 4px 8px 8px 4px;
+        color: #555;
+    }
+</style>
+
+<div class="stakleni-kontejner">
+
+    <div class="omotac-naslova">
+        <h1 class="naslov-stranice">Детаљи захтева</h1>
+        <a href="@Url.Action("Index")" class="stakleno-dugme-nazad"><i class="fas fa-arrow-left"></i> Назад</a>
+    </div>
+
+    <!-- MASTER DEO: Основне информације -->
+    <div class="stakleni-panel">
+        <div class="zaglavlje-panela">
+            Основне информације о захтеву (Мастер)
+        </div>
+
+        <div class="info-mreza">
+            <!-- Red 1 -->
+            <div class="info-grupa">
+                <span class="info-oznaka">Број захтева:</span>
+                <div class="info-vrednost">@Model.Zahtev.BrojZahteva</div>
+            </div>
+            <div class="info-grupa">
+                <span class="info-oznaka">Датум подношења:</span>
+                <div class="info-vrednost">@Model.Zahtev.DatumPodnosenja.ToString("dd.MM.yyyy.")</div>
+            </div>
+
+            <!-- Red 2 -->
+            <div class="info-grupa">
+                <span class="info-oznaka">Назив пројекта:</span>
+                <div class="info-vrednost">@Model.Zahtev.NazivProjekta</div>
+            </div>
+            <div class="info-grupa">
+                <span class="info-oznaka">Статус:</span>
+                <div class="info-vrednost">@Model.Zahtev.Status</div>
+            </div>
+
+            <!-- Red 3 -->
+            <div class="info-grupa">
+                <span class="info-oznaka">Захтев поднео:</span>
+                <div class="info-vrednost">@Model.Zahtev.ZahtevPodneo</div>
+            </div>
+            <div class="info-grupa">
+                <span class="info-oznaka">Потврда менаџера:</span>
+                <div class="info-vrednost">
+                    @(Model.Zahtev.PotvrdaMenadzera ? "Одобрено" : "На чекању")
+                </div>
+            </div>
+
+            <!-- Red 4 -->
+            <div class="info-grupa">
+                <span class="info-oznaka">Датум испоруке:</span>
+                <div class="info-vrednost">
+                    @(Model.Zahtev.NoviDatumIsporuke.HasValue ? Model.Zahtev.NoviDatumIsporuke.Value.ToString("dd.MM.yyyy.") : "Није дефинисан")
+                </div>
+            </div>
+            <div class="info-grupa">
+                <!-- Prazan element za očuvanje mrežne strukture -->
+            </div>
+
+            <!-- Red 5 (Tekstualna polja šira) -->
+            <div class="info-grupa">
+                <span class="info-oznaka">Детаљан опис шта се мења:</span>
+                <div class="info-vrednost info-vrednost-velika">
+                    @(string.IsNullOrEmpty(Model.Zahtev.DetaljanOpis) ? "/" : Model.Zahtev.DetaljanOpis)
+                </div>
+            </div>
+            <div class="info-grupa">
+                <span class="info-oznaka">Пословни разлог за измену:</span>
+                <div class="info-vrednost info-vrednost-velika">
+                    @(string.IsNullOrEmpty(Model.Zahtev.PoslovniRazlog) ? "/" : Model.Zahtev.PoslovniRazlog)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL DEO: Табела ставки -->
+    <div class="stakleni-panel">
+        <div class="zaglavlje-panela">
+            Ставке захтева (Детаљи)
+        </div>
+
+        @if (Model.Stavke != null && Model.Stavke.Any())
+        {
+            <table class="staklena-tabela">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>ФАЗА / ВРСТА ПОСЛА (НПР. КС, БАЗА, ТЕСТИРАЊЕ)</th>
+                        <th>САТИ (Ч)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int redniBroj = 1;
+                        decimal ukupnoSati = 0;
+                    }
+                    @foreach (var stavka in Model.Stavke)
+                    {
+                        ukupnoSati += stavka.ProcenjenoSati;
+                        <tr>
+                            <td>@(redniBroj++)</td>
+                            <td>@stavka.FazaIliVrstaPosla</td>
+                            <td>@stavka.ProcenjenoSati ч</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">УКУПНО ПРОЦЕЊЕНО ВРЕМЕ (сати):</td>
+                        <td>@ukupnoSati ч</td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+        else
+        {
+            <div class="stakleno-obavestenje">
+                Овај захтев тренутно нема унетих ставки.
+            </div>
+        }
+    </div>
+</div>

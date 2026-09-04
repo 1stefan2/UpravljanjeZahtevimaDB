@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ЦРФ Систем</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #bae0ff; /* Иста позадина као на осталим страницама */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh; /* Омогућава лакше вертикално центрирање логин форме */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Главни садржај (Логин форма) иде преко целог екрана без менија -->
+    <main class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+        @RenderBody()
+    </main>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

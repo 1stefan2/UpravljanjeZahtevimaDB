@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ЦРФ Систем</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; /* Иста позадина као на осталим страницама */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh; /* Омогућава лакше вертикално центрирање логин форме */
+        }
+
+        .btn-prijava {
+            background-color: #0C74D3; /* Ozbiljnija plava kao na dizajnu */
+            color: white !important;
+            border-radius: 6px;
+            padding: 8px 30px !important; /* Šire dugme (više paddinga sa strane) */
+            font-size: 1.1rem; /* Usaglašena veličina fonta */
+            font-weight: 400; /* STANJENO: Uklonjen bold efekat */
+            text-decoration: none;
+            border: none;
+        }
+
+            .btn-prijava:hover {
+                background-color: #155dbb;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Navigacija sa providnom pozadinom i poravnatim sadržajem -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+        <div class="container">
+
+            <!-- Toggler dugme za mobilne uređaje -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Desna strana: prijava / odjava -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (Session["KorisnickoIme"] != null)
+                    {
+                        <li class="nav-item d-flex align-items-center">
+                            <span class="nav-link text-dark me-2">Здраво, <b>@Session["KorisnickoIme"]</b></span>
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Одјава", "Logout", "Auth", null, new { @class = "btn btn-danger px-3 ms-2" })
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink("Пријава", "Login", "Auth", null, new { @class = "nav-link btn-prijava" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Glavni sadržaj (npr. Login forma) ide preko celog ekrana bez dodatnog menija -->
+    <main class="d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 56px);">
+        @RenderBody()
+    </main>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

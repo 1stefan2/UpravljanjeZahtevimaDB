@@ -1,0 +1,881 @@
+﻿@model PrezentacioniSloj.ViewModels.KreiranjeZahtevaViewModel
+
+@{
+    ViewBag.Title = "Образац измене";
+    Layout = "~/Views/Layouti/_KreirajLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    :root {
+        --primarna-tamna: #1a273b;
+        --primarna-srednja: #2c4a6e;
+        --primarna-plava: #4a6f9a;
+        --primarna-svetla: #a8c8e8;
+        --akcentna-plava: #5b7996;
+        --akcentna-lebdenje: #4a637d;
+        --pozadina-prekrivac: rgba(225, 238, 250, 0.55);
+        --kartica-pozadina: rgba(255, 255, 255, 0.65);
+        --polje-pozadina: rgba(255, 255, 255, 0.92);
+        --granica-staklo: rgba(255, 255, 255, 0.65);
+        --senka-kartice: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+        --senka-fokus: 0 0 0 3px rgba(74, 111, 154, 0.2);
+        --radijus-kartice: 18px;
+        --radijus-polja: 7px;
+        --porodica-fontova: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body, html {
+        min-height: 100vh;
+        background-image: url('/Content/Slike/Pozadina2.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: var(--porodica-fontova);
+        color: #111;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .omotac-stranice {
+        padding: 30px 16px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    /* ============ НАСЛОВ СТРАНИЦЕ ============ */
+    .naslov-stranice {
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: var(--primarna-tamna);
+        margin-bottom: 6px;
+        text-align: center;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(255, 255, 255, 0.7);
+    }
+
+    .podnaslov-stranice {
+        font-size: 0.95rem;
+        color: #4a5a6e;
+        margin-bottom: 24px;
+        text-align: center;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+    }
+
+    /* ============ ГЛАВНА КАРТИЦА ============ */
+    .kartica-forme {
+        background: var(--pozadina-prekrivac);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--granica-staklo);
+        border-radius: var(--radijus-kartice);
+        padding: 28px 36px 24px;
+        width: 100%;
+        max-width: 1400px;
+        box-shadow: var(--senka-kartice);
+        transition: all 0.3s ease;
+    }
+
+    /* ============ ЗАГЛАВЉА СЕКЦИЈА ============ */
+    .zaglavlje-sekcije {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--primarna-tamna);
+        margin-top: 20px;
+        margin-bottom: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        position: relative;
+        text-align: center;
+    }
+
+        .zaglavlje-sekcije:first-of-type {
+            margin-top: 0;
+        }
+
+        .zaglavlje-sekcije::before,
+        .zaglavlje-sekcije::after {
+            content: "";
+            flex: 1;
+            height: 1.5px;
+            background: linear-gradient(to right, transparent, rgba(44, 74, 110, 0.3), transparent);
+        }
+
+        .zaglavlje-sekcije::before {
+            margin-right: 12px;
+        }
+
+        .zaglavlje-sekcije::after {
+            margin-left: 12px;
+        }
+
+    .broj-sekcije {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--primarna-srednja);
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    /* ============ СПЕЦИФИЧНО ЗА СЕКЦИЈУ 3 ============ */
+    .traka-sekcije-3 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 20px;
+        margin-bottom: 14px;
+    }
+
+        .traka-sekcije-3 .zaglavlje-sekcije {
+            margin: 0;
+            flex-grow: 1;
+        }
+
+            .traka-sekcije-3 .zaglavlje-sekcije::before,
+            .traka-sekcije-3 .zaglavlje-sekcije::after {
+                content: none;
+            }
+
+    /* ============ ЛАБЕЛЕ ============ */
+    .labela-forme {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--primarna-tamna);
+        margin-bottom: 3px;
+        letter-spacing: 0.2px;
+    }
+
+    /* ============ ИНПУТИ ============ */
+    .kontrola-forme, .padajuca-lista {
+        width: 100%;
+        border-radius: var(--radijus-polja) !important;
+        border: 1px solid rgba(200, 215, 230, 0.9) !important;
+        padding: 6px 12px !important;
+        font-size: 0.9rem;
+        background-color: var(--polje-pozadina);
+        color: #111;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: all 0.25s ease;
+        min-height: 34px;
+        font-weight: 400;
+    }
+
+        .kontrola-forme:hover, .padajuca-lista:hover {
+            border-color: rgba(150, 175, 200, 0.9) !important;
+        }
+
+        .kontrola-forme:focus, .padajuca-lista:focus {
+            border-color: var(--primarna-plava) !important;
+            box-shadow: var(--senka-fokus);
+            background-color: #ffffff;
+            outline: none;
+        }
+
+        .kontrola-forme::placeholder {
+            color: #9aabba;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+    .padajuca-lista {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a6f9a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+        padding-right: 32px !important;
+    }
+
+    /* ============ TEXTAREA ============ */
+    textarea.prilagodjeni-tekst-prostor {
+        width: 100% !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        line-height: 1.5;
+        padding: 7px 14px !important;
+        border-radius: var(--radijus-polja) !important;
+        resize: vertical;
+        font-family: var(--porodica-fontova);
+    }
+
+    /* ============ ТАБЕЛА ============ */
+    .prilagodjena-tabela {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(200, 215, 230, 0.7);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+        .prilagodjena-tabela th {
+            background: linear-gradient(135deg, #d0e2f2, #bdd5eb);
+            color: #2a3d55;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: left;
+            border-bottom: 2px solid #a8c0da;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .prilagodjena-tabela td {
+            padding: 7px 14px;
+            vertical-align: middle;
+            border-bottom: 1px solid #e1ebf5;
+            background-color: #f8fbfe;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .prilagodjena-tabela tbody tr:hover td {
+            background-color: #eef4fa;
+        }
+
+        .prilagodjena-tabela tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Инпути у табели - интегрисани без видљивог оквира */
+        .prilagodjena-tabela .kontrola-forme {
+            background-color: transparent;
+            border: 1px solid transparent !important;
+            box-shadow: none;
+            padding: 4px 8px;
+            border-radius: 5px !important;
+            font-size: 0.9rem;
+            min-height: 30px;
+            transition: all 0.25s;
+        }
+
+            .prilagodjena-tabela .kontrola-forme:hover {
+                background-color: rgba(255, 255, 255, 0.7);
+                border-color: rgba(200, 215, 230, 0.6) !important;
+            }
+
+            .prilagodjena-tabela .kontrola-forme:focus {
+                background-color: #fff;
+                border-color: var(--primarna-plava) !important;
+                box-shadow: var(--senka-fokus);
+            }
+
+    .podnozje-tabele td {
+        background: linear-gradient(135deg, #d0e2f2, #bdd5eb);
+        color: #2a3d55;
+        font-weight: 600;
+        padding: 10px 14px;
+        border-top: 2px solid #a8c0da;
+        font-size: 0.88rem;
+        letter-spacing: 0.3px;
+    }
+
+    /* ============ ДУГМИЋИ ============ */
+    .dugme-dodaj {
+        background: linear-gradient(135deg, #5b7996, #4a6a8a);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        padding: 7px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(74, 111, 154, 0.25);
+    }
+
+        .dugme-dodaj:hover {
+            background: linear-gradient(135deg, #4a637d, #3d5670);
+            box-shadow: 0 4px 14px rgba(74, 111, 154, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .dugme-dodaj:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(74, 111, 154, 0.2);
+        }
+
+    .dugme-akcija-obrisi {
+        background-color: transparent;
+        color: #555;
+        border: 1px solid #e0b8b8;
+        border-radius: 20px;
+        padding: 3px 14px;
+        font-size: 0.78rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        transition: all 0.25s ease;
+        font-weight: 500;
+    }
+
+        .dugme-akcija-obrisi i {
+            color: #d32f2f;
+            font-size: 0.85rem;
+        }
+
+        .dugme-akcija-obrisi:hover {
+            background-color: #feecec;
+            border-color: #d32f2f;
+            color: #c62828;
+        }
+
+        .dugme-akcija-obrisi:active {
+            transform: scale(0.97);
+        }
+
+    .dugme-sacuvaj {
+        background: linear-gradient(135deg, #203f60, #17324d);
+        color: #fff;
+        border-radius: 20px;
+        padding: 8px 28px;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 14px rgba(23, 50, 77, 0.3);
+    }
+
+        .dugme-sacuvaj:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(23, 50, 77, 0.4);
+        }
+
+        .dugme-sacuvaj:active {
+            transform: translateY(0);
+        }
+
+    .dugme-odustani {
+        background-color: #eaf1f7;
+        color: #333;
+        border-radius: 20px;
+        padding: 8px 24px;
+        border: 1px solid rgba(100, 130, 160, 0.25);
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .dugme-odustani:hover {
+            background-color: #dbe5ee;
+            color: #111;
+            border-color: rgba(100, 130, 160, 0.4);
+        }
+
+    /* ============ CHECKBOX ============ */
+    .polje-za-oznacavanje {
+        width: 1.05rem;
+        height: 1.05rem;
+        margin-top: 0.1rem;
+        cursor: pointer;
+        accent-color: var(--primarna-plava);
+        border-radius: 4px;
+    }
+
+        .polje-za-oznacavanje:focus {
+            box-shadow: 0 0 0 3px rgba(74, 111, 154, 0.2);
+        }
+
+    .labela-za-oznacavanje {
+        font-weight: 500;
+        font-size: 0.88rem;
+        color: var(--primarna-tamna);
+        cursor: pointer;
+    }
+
+    /* ============ СУФИКС "ч" ЗА САТЕ ============ */
+    .sati-omotac {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+        .sati-omotac::after {
+            content: "ч";
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
+            color: #6a7f95;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+    .sati-unos {
+        padding-right: 28px !important;
+    }
+
+    /* ============ РЕДОВИ И РАЗМАЦИ ============ */
+    .red {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -6px;
+        margin-right: -6px;
+    }
+
+    [class*="kolona-"] {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    .kolona-sr-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+
+    .kolona-sr-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .kolona-sr-8 {
+        flex: 0 0 66.666667%;
+        max-width: 66.666667%;
+    }
+
+    .kolona-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .razmak-2 {
+        gap: 0.5rem;
+    }
+
+    .razmak-3 {
+        gap: 0.75rem;
+    }
+
+    .margina-dole-0 {
+        margin-bottom: 0;
+    }
+
+    .margina-dole-1 {
+        margin-bottom: 0.5rem;
+    }
+
+    .margina-dole-2 {
+        margin-bottom: 0.75rem;
+    }
+
+    .margina-dole-3 {
+        margin-bottom: 1rem;
+    }
+
+    .margina-gore-1 {
+        margin-top: 0.5rem;
+    }
+
+    .margina-gore-2 {
+        margin-top: 0.75rem;
+    }
+
+    .margina-gore-3 {
+        margin-top: 1rem;
+    }
+
+    .margina-gore-4 {
+        margin-top: 1.5rem;
+    }
+
+    .odstojanje-dole-1 {
+        padding-bottom: 0.5rem;
+    }
+
+    .prikaz-fleks {
+        display: flex;
+    }
+
+    .poravnaj-stavke-centar {
+        align-items: center;
+    }
+
+    .poravnaj-stavke-kraj {
+        align-items: flex-end;
+    }
+
+    .rasporedi-sadrzaj-kraj {
+        justify-content: flex-end;
+    }
+
+    .rasporedi-sadrzaj-izmedju {
+        justify-content: space-between;
+    }
+
+    .rasporedi-sadrzaj-centar {
+        justify-content: center;
+    }
+
+    .praznina-2 {
+        gap: 0.75rem;
+    }
+
+    .praznina-3 {
+        gap: 1rem;
+    }
+
+    .margina-kraj-2 {
+        margin-right: 0.5rem;
+    }
+
+    .margina-kraj-3 {
+        margin-right: 0.75rem;
+    }
+
+    .fleks-rast-1 {
+        flex-grow: 1;
+    }
+
+    .tekst-centar {
+        text-align: center;
+    }
+
+    .tekst-kraj {
+        text-align: right;
+    }
+
+    .tekst-greska {
+        color: #d32f2f;
+    }
+
+    .font-podebljano {
+        font-weight: 700;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @@media (max-width: 992px) {
+        .kolona-sr-4, .kolona-sr-6, .kolona-sr-8 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .kartica-forme {
+            padding: 18px 20px 16px;
+        }
+
+        .naslov-stranice {
+            font-size: 1.8rem;
+        }
+
+        .traka-sekcije-3 {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+        }
+
+        .dugme-dodaj {
+            text-align: center;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .omotac-stranice {
+            padding: 16px 8px 24px;
+        }
+
+        .kartica-forme {
+            padding: 14px 12px 12px;
+            border-radius: 12px;
+        }
+
+        .naslov-stranice {
+            font-size: 1.5rem;
+        }
+
+        .prilagodjena-tabela th,
+        .prilagodjena-tabela td {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+    }
+
+    /* ============ ВАЛИДАЦИЈА ============ */
+    .greska-validacije-polja {
+        font-size: 0.75rem;
+        color: #d32f2f;
+        margin-top: 2px;
+    }
+</style>
+
+<div class="omotac-stranice">
+
+    <h1 class="naslov-stranice">Образац измене</h1>
+    <p class="podnaslov-stranice">Попуните све потребне податке за измену захтева</p>
+
+    <div class="kartica-forme">
+        @using (Html.BeginForm("Kreiraj", "ZahtevZaIzmenom", FormMethod.Post, new { id = "obrazacZahteva", @class = "zahteva-validaciju" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "tekst-greska" })
+
+            <!-- ==================== СЕКЦИЈА 1 ==================== -->
+            <div class="zaglavlje-sekcije">
+                <span class="broj-sekcije">1</span>
+                Основни подаци (мастер)
+            </div>
+
+            <div class="red razmak-2 margina-dole-2">
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.DatumPodnosenja, "Датум подношења", new { @class = "labela-forme" })
+                    @Html.TextBoxFor(m => m.Zahtev.DatumPodnosenja, "{0:yyyy-MM-dd}", new { @class = "kontrola-forme", type = "date" })
+                </div>
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.BrojZahteva, "Број захтева", new { @class = "labela-forme" })
+                    @Html.TextBoxFor(m => m.Zahtev.BrojZahteva, new { @class = "kontrola-forme", placeholder = "CR-YYYY-NNN" })
+                </div>
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.Status, "Статус", new { @class = "labela-forme" })
+                    @Html.DropDownListFor(m => m.Zahtev.Status, new SelectList(new[] { "На чекању", "Одобрен", "Одбијен", "У реализацији", "Реализован" }), "--- Изаберите статус ---", new { @class = "padajuca-lista" })
+                </div>
+            </div>
+
+            <div class="red razmak-2 margina-dole-2">
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.NazivProjekta, "Назив пројекта", new { @class = "labela-forme" })
+                    @Html.TextBoxFor(m => m.Zahtev.NazivProjekta, new { @class = "kontrola-forme", placeholder = "Назив пројекта" })
+                </div>
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.IzabranKlijentId, "Клијент", new { @class = "labela-forme" })
+                    @Html.DropDownListFor(m => m.IzabranKlijentId, Model.ListaKlijenata, "— Изаберите клијента —", new { @class = "padajuca-lista" })
+                </div>
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.IzabranKorisnikId, "Корисник (подносилац)", new { @class = "labela-forme" })
+                    @Html.DropDownListFor(m => m.IzabranKorisnikId, Model.ListaKorisnika, "— Изаберите корисника —", new { @class = "padajuca-lista" })
+                </div>
+            </div>
+
+            <div class="red razmak-2 margina-dole-1">
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.ZahtevPodneo, "Захтев поднео (име и презиме)", new { @class = "labela-forme" })
+                    @Html.TextBoxFor(m => m.Zahtev.ZahtevPodneo, new { @class = "kontrola-forme", placeholder = "Име и презиме" })
+                </div>
+            </div>
+
+            <!-- ==================== СЕКЦИЈА 2 ==================== -->
+            <div class="zaglavlje-sekcije margina-gore-4">
+                <span class="broj-sekcije">2</span>
+                Опис захтеване измене
+            </div>
+
+            <div class="red razmak-2 margina-dole-2">
+                <div class="kolona-12">
+                    @Html.LabelFor(m => m.Zahtev.DetaljanOpis, "Детаљан опис шта се мења", new { @class = "labela-forme" })
+                    @Html.TextAreaFor(m => m.Zahtev.DetaljanOpis, new { @class = "kontrola-forme prilagodjeni-tekst-prostor", rows = "1", placeholder = "Унесите детаљан опис измене..." })
+                </div>
+            </div>
+
+            <div class="red razmak-2 margina-dole-1">
+                <div class="kolona-12">
+                    @Html.LabelFor(m => m.Zahtev.PoslovniRazlog, "Пословни разлог за измену", new { @class = "labela-forme" })
+                    @Html.TextAreaFor(m => m.Zahtev.PoslovniRazlog, new { @class = "kontrola-forme prilagodjeni-tekst-prostor", rows = "1", placeholder = "Унесите пословни разлог..." })
+                </div>
+            </div>
+
+            <!-- ==================== СЕКЦИЈА 3 ==================== -->
+            <div class="traka-sekcije-3">
+                <div class="zaglavlje-sekcije">
+                    <span class="broj-sekcije">3</span>
+                    Процена радова и трошкова (деталј – ставке измене)
+                </div>
+                <button type="button" id="dugmeDodajStavku" class="dugme-dodaj">
+                    <i class="fas fa-plus-circle margina-kraj-2"></i>Додај ставку
+                </button>
+            </div>
+
+            <table class="prilagodjena-tabela" id="tabelaStavki">
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">Фаза / врста посла (нпр. КС, База, Тестирање)</th>
+                        <th style="width: 18%;">Сати (ч)</th>
+                        <th style="width: 12%; text-align: center;">Акција</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Stavke != null && Model.Stavke.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Stavke.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(m => m.Stavke[i].FazaIliVrstaPosla, new { @class = "kontrola-forme", placeholder = "Унесите фазу или врсту посла" })
+                                </td>
+                                <td>
+                                    <div class="sati-omotac">
+                                        @Html.TextBoxFor(m => m.Stavke[i].ProcenjenoSati, new { @class = "kontrola-forme sati-unos", type = "number", min = "0", step = "0.5", oninput = "izracunajUkupnoSati()" })
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <button type="button" class="dugme-akcija-obrisi" onclick="obrisiRed(this)">
+                                        <i class="fas fa-trash-alt"></i> Обриши
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #8a9db0; font-style: italic; padding: 18px;">
+                                Нема додатих ставки. Кликните на „Додај ставку" да бисте започели.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="podnozje-tabele">
+                        <td style="text-align: right;" colspan="2">УКУПНО ПРОЦЕЊЕНО ВРЕМЕ (сати):</td>
+                        <td id="prikazUkupnoSati" style="text-align: center; font-weight: 700; font-size: 1rem;">0 ч</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- ==================== СЕКЦИЈА 4 ==================== -->
+            <div class="zaglavlje-sekcije margina-gore-4">
+                <span class="broj-sekcije">4</span>
+                Утицај на пројекат и одобрења
+            </div>
+
+            <div class="red poravnaj-stavke-kraj margina-dole-2">
+                <div class="kolona-sr-4">
+                    @Html.LabelFor(m => m.Zahtev.NoviDatumIsporuke, "Нови датум испоруке", new { @class = "labela-forme" })
+                    @Html.TextBoxFor(m => m.Zahtev.NoviDatumIsporuke, "{0:yyyy-MM-dd}", new { @class = "kontrola-forme", type = "date" })
+                </div>
+                <div class="kolona-sr-8 prikaz-fleks rasporedi-sadrzaj-kraj odstojanje-dole-1">
+                    <div class="forma-provera prikaz-fleks poravnaj-stavke-centar">
+                        @Html.CheckBoxFor(m => m.Zahtev.PotvrdaMenadzera, new { @class = "polje-za-oznacavanje margina-kraj-2" })
+                        @Html.LabelFor(m => m.Zahtev.PotvrdaMenadzera, "Потврда менаџера пројекта", new { @class = "labela-za-oznacavanje margina-dole-0" })
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== ДУГМАД ЗА АКЦИЈУ ==================== -->
+            <div class="prikaz-fleks rasporedi-sadrzaj-kraj praznina-2 margina-gore-3" style="border-top: 1px solid rgba(200, 215, 230, 0.5); padding-top: 16px;">
+                <a href="@Url.Action("Index", "ZahtevZaIzmenom")" class="dugme-odustani">
+                    <i class="fas fa-times-circle"></i> Одустани
+                </a>
+                <button type="submit" class="dugme-sacuvaj">
+                    <i class="fas fa-check-circle margina-kraj-2"></i>Сачувај захтев
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let indeksStavke = @(Model.Stavke != null ? Model.Stavke.Count : 0);
+
+        document.getElementById("dugmeDodajStavku").addEventListener("click", function () {
+            let tabela = document.getElementById("tabelaStavki").getElementsByTagName('tbody')[0];
+
+            // Уклони privremeniRed ако постоји
+            let privremeniRed = tabela.querySelector("tr td[colspan='3']");
+            if (privremeniRed) {
+                tabela.innerHTML = "";
+            }
+
+            let noviRed = tabela.insertRow();
+
+            noviRed.innerHTML = `
+                <td>
+                    <input class="kontrola-forme" name="Stavke[${indeksStavke}].FazaIliVrstaPosla" type="text" value="" placeholder="Унесите фазу или врсту посла" />
+                </td>
+                <td>
+                    <div class="sati-omotac">
+                        <input class="kontrola-forme sati-unos" name="Stavke[${indeksStavke}].ProcenjenoSati" type="number" min="0" step="0.5" value="0" oninput="izracunajUkupnoSati()" />
+                    </div>
+                </td>
+                <td style="text-align: center;">
+                    <button type="button" class="dugme-akcija-obrisi" onclick="obrisiRed(this)">
+                        <i class="fas fa-trash-alt"></i> Обриши
+                    </button>
+                </td>
+            `;
+            indeksStavke++;
+            izracunajUkupnoSati();
+        });
+
+        function obrisiRed(dugme) {
+            let red = dugme.closest("tr");
+            red.remove();
+
+            // Ако је табела празна, додај placeholder
+            let tabela = document.getElementById("tabelaStavki").getElementsByTagName('tbody')[0];
+            if (tabela.rows.length === 0) {
+                tabela.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #8a9db0; font-style: italic; padding: 18px;">
+                            Нема додатих ставки. Кликните на „Додај ставку" да бисте започели.
+                        </td>
+                    </tr>
+                `;
+            }
+
+            preurediIndekse();
+            izracunajUkupnoSati();
+        }
+
+        function preurediIndekse() {
+            let redovi = document.querySelectorAll("#tabelaStavki tbody tr:not(:has(td[colspan='3']))");
+            redovi.forEach((red, index) => {
+                let poljeNaziv = red.querySelector("input[name*='FazaIliVrstaPosla']");
+                let poljeSati = red.querySelector("input[name*='ProcenjenoSati']");
+
+                if (poljeNaziv) poljeNaziv.name = `Stavke[${index}].FazaIliVrstaPosla`;
+                if (poljeSati) poljeSati.name = `Stavke[${index}].ProcenjenoSati`;
+            });
+            indeksStavke = redovi.length;
+        }
+
+        function izracunajUkupnoSati() {
+            let poljaSati = document.querySelectorAll(".sati-unos");
+            let ukupno = 0;
+            poljaSati.forEach(polje => {
+                let vrednost = parseFloat(polje.value) || 0;
+                ukupno += vrednost;
+            });
+            // Заокружи на 2 децимале
+            ukupno = Math.round(ukupno * 100) / 100;
+            document.getElementById("prikazUkupnoSati").innerText = ukupno + " ч";
+        }
+
+        window.onload = function () {
+            izracunajUkupnoSati();
+        };
+    </script>
+}
