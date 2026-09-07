@@ -15,7 +15,7 @@ namespace SlojPodataka.Entities
         public decimal ProcenjeniSati { get; set; }
         public string Napomena { get; set; } = null;
 
-        // Navigacioni property ka master entitetu
+        
         public ZahtevZaIzmenom ZahtevZaIzmenom { get; set; } = null;
     }
 }

@@ -22,11 +22,6 @@ namespace SlojPodataka.Entities
         public DateTime? NoviDatumIsporuke { get; set; }
         public bool PotvrdaMenadzera { get; set; }
 
-        
-
-
-
-        // Navigacioni propertiji
         public Klijent Klijent { get; set; } = null;
         public Korisnik Korisnik { get; set; } = null;
         public List<StavkaZahteva> Stavke { get; set; } = new List<StavkaZahteva>();

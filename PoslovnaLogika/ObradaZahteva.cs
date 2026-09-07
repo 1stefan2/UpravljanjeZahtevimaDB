@@ -17,12 +17,12 @@ namespace PoslovnaLogika
             _stavkaRepo = new StavkaZahtevaRepo(konekcioniString);
         }
 
-        // 1. Čitanje limita iz JSON-a
+        
         public int UcitajKonfiguraciju()
         {
             if (!File.Exists(_konfiguracijaFajl))
             {
-                return 40; // Default vrednost ako fajl ne postoji
+                return 40; 
             }
 
             string jsonSadrzaj = File.ReadAllText(_konfiguracijaFajl);
@@ -31,19 +31,18 @@ namespace PoslovnaLogika
             return jsonObj["pravila_odobrenja"]["limit_sati_za_odobrenje"]?.Value<int>() ?? 40;
         }
 
-        // 2. Provera poslovnog pravila (AKO-ONDA)
+        
         public bool ProbijaLimitBezPotvrde(int zahtevId, decimal ukupnoSati, string status, bool potvrdaMenadzera)
         {
             int limitSati = UcitajKonfiguraciju();
 
-            // Ako sate nismo već prosledili iz entiteta, čitamo ih iz baze preko Repozitorijuma
+            
             if (ukupnoSati == 0 && zahtevId > 0)
             {
                 var stavke = _stavkaRepo.DajPoIdZahteva(zahtevId);
                 ukupnoSati = stavke?.Sum(s => s.ProcenjeniSati) ?? 0;
             }
 
-            // AKO ide u realizaciju, ima više sati od limita I nema potvrdu -> pravilo je prekršeno
             if ((status == "У реализацији" || status == "U realizaciji") && ukupnoSati > limitSati && !potvrdaMenadzera)
             {
                 return true;
@@ -52,10 +51,9 @@ namespace PoslovnaLogika
             return false;
         }
 
-        // 3. Podrška za pripremu dokumenta za štampu
         public void PripremiZahtevZaStampu(int zahtevId)
         {
-            // TODO: Logika za štampu
+            
             throw new System.NotImplementedException();
         }
     }

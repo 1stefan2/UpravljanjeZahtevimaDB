@@ -21,7 +21,7 @@ namespace SlojServisa.Controllers
             _stavkaRepo = new StavkaZahtevaRepo(connectionString);
         }
 
-        // Pomoćna metoda za instanciranje poslovne logike
+        
         private ObradaZahteva InicijalizujObraduZahteva()
         {
             string putanjaJson = HostingEnvironment.MapPath("~/App_Data/poslovna_pravila.json");
@@ -29,7 +29,6 @@ namespace SlojServisa.Controllers
             return new ObradaZahteva(putanjaJson, connString);
         }
 
-        // 1. Čitanje svih zahteva (sa opcionim filtriranjem po statusu i broju zahteva)
         [HttpGet]
         [Route("")]
         public IHttpActionResult DajSve(string status = null, string brojZahteva = null)
@@ -49,7 +48,6 @@ namespace SlojServisa.Controllers
             return Ok(zahtevi);
         }
 
-        // 2. Čitanje jednog zahteva po ID-u
         [HttpGet]
         [Route("{id}")]
         public IHttpActionResult DajPoId(int id)
@@ -62,7 +60,6 @@ namespace SlojServisa.Controllers
             return Ok(zahtev);
         }
 
-        // 3. Kreiranje novog zahteva
         [HttpPost]
         [Route("")]
         public IHttpActionResult Dodaj([FromBody] ZahtevZaIzmenom entitet)
@@ -88,7 +85,6 @@ namespace SlojServisa.Controllers
             return Ok(entitet);
         }
 
-        // 4. Ažuriranje postojećeg zahteva (Standardni update)
         [HttpPut]
         [Route("{id}")]
         public IHttpActionResult Izmeni(int id, [FromBody] ZahtevZaIzmenom entitet)
@@ -112,7 +108,6 @@ namespace SlojServisa.Controllers
             return Ok();
         }
 
-        // 5. Promena statusa i validacija pravila
         [HttpPut]
         [Route("{id}/status")]
         public IHttpActionResult PromeniStatus(int id, [FromBody] ZahtevZaIzmenom izmenaPodataka)
@@ -145,7 +140,6 @@ namespace SlojServisa.Controllers
             return Ok(postojeciZahtev);
         }
 
-        // 6. Brisanje zahteva
         [HttpDelete]
         [Route("{id}")]
         public IHttpActionResult Obrisi(int id)

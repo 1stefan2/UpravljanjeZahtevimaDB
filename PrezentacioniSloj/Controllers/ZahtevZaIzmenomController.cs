@@ -42,10 +42,8 @@ namespace PrezentacioniSloj.Controllers
                 {
                     string jsonResponse = await response.Content.ReadAsStringAsync();
 
-                    // 1. Deserijalizacija u originalni entitet
                     var entiteti = JsonConvert.DeserializeObject<List<ZahtevZaIzmenom>>(jsonResponse);
 
-                    // 2. Mapiranje u ViewModel (sa proverom da li je lista null)
                     if (entiteti != null)
                     {
                         modeli = entiteti.Select(e => new ZahtevZaIzmenomViewModel
@@ -69,7 +67,7 @@ namespace PrezentacioniSloj.Controllers
         }
 
 
-        // GET: ZahtevZaIzmenom/Create
+        
         [HttpGet]
         public async Task<ActionResult> Kreiraj()
         {
@@ -86,7 +84,7 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-        // POST: ZahtevZaIzmenom/Create
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Kreiraj(KreiranjeZahtevaViewModel model)
@@ -150,10 +148,10 @@ namespace PrezentacioniSloj.Controllers
 
                         try
                         {
-                            // Parsiramo JSON odgovor od API-ja
+                            
                             var jsonError = Newtonsoft.Json.Linq.JObject.Parse(errorContent);
 
-                            // Ako postoji svojstvo "Message", izvlačimo samo čist tekst
+                            
                             if (jsonError["Message"] != null)
                             {
                                 porukaZaKorisnika = jsonError["Message"].ToString();
@@ -161,7 +159,7 @@ namespace PrezentacioniSloj.Controllers
                         }
                         catch
                         {
-                            // Ako slučajno nije JSON (npr. pukne IIS greška), prikazujemo sirov tekst
+                            
                             porukaZaKorisnika = errorContent;
                         }
 
@@ -178,7 +176,7 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-        // GET: ZahtevZaIzmenom/Details/5
+        
         [HttpGet]
         public async Task<ActionResult> Detalji(int id)
         {
@@ -241,7 +239,7 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-        // GET: ZahtevZaIzmenom/Izmeni/5
+        
         [HttpGet]
         public async Task<ActionResult> Izmeni(int id)
         {
@@ -283,7 +281,7 @@ namespace PrezentacioniSloj.Controllers
                         PotvrdaMenadzera = entitet.PotvrdaMenadzera
                     };
 
-                    // MAPIRANJE STAVKI (Ovo je nedostajalo)
+                    
                     model.Stavke = entitet.Stavke != null
                         ? entitet.Stavke.Select(s => new StavkaZahtevaViewModel
                         {
@@ -307,7 +305,7 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-        // POST: ZahtevZaIzmenom/Edit/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Izmeni(KreiranjeZahtevaViewModel model)
@@ -374,10 +372,10 @@ namespace PrezentacioniSloj.Controllers
 
                         try
                         {
-                            // Parsiramo JSON odgovor od API-ja
+                            
                             var jsonError = Newtonsoft.Json.Linq.JObject.Parse(errorContent);
 
-                            // Ako postoji svojstvo "Message", izvlačimo samo čist tekst
+                            
                             if (jsonError["Message"] != null)
                             {
                                 porukaZaKorisnika = jsonError["Message"].ToString();
@@ -385,7 +383,7 @@ namespace PrezentacioniSloj.Controllers
                         }
                         catch
                         {
-                            // Ako slučajno nije JSON (npr. pukne IIS greška), prikazujemo sirov tekst
+                            
                             porukaZaKorisnika = errorContent;
                         }
 
@@ -402,7 +400,7 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-        // POST: ZahtevZaIzmenom/Delete/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Obrisi(int id)
@@ -428,7 +426,7 @@ namespace PrezentacioniSloj.Controllers
             }
         }
 
-        // GET: ZahtevZaIzmenom/Stampaj/5
+       
         [HttpGet]
         public async Task<ActionResult> Stampaj(int id)
         {
@@ -482,21 +480,14 @@ namespace PrezentacioniSloj.Controllers
             return View(model);
         }
 
-
-
-
-
-
-
-        // GET: ZahtevZaIzmenom/SpisakSvih
         [HttpGet]
         public async Task<ActionResult> SpisakSvih()
         {
-            // Može se preusmeriti na Index bez filtera
+            
             return RedirectToAction("Index");
         }
 
-        // Pomoćna metoda za učitavanje padajućih lista (klijenti i korisnici)
+        
         private async Task PopuniPadajuceListe(KreiranjeZahtevaViewModel model)
         {
             using (var client = new HttpClient())
@@ -506,7 +497,7 @@ namespace PrezentacioniSloj.Controllers
                 client.DefaultRequestHeaders.Accept.Add(
                     new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
-                // Učitavanje klijenata
+                
                 HttpResponseMessage klijentiResponse = await client.GetAsync(_apiKlijentUrl);
                 if (klijentiResponse.IsSuccessStatusCode)
                 {
@@ -525,7 +516,7 @@ namespace PrezentacioniSloj.Controllers
                     model.ListaKlijenata = new List<SelectListItem>();
                 }
 
-                // Učitavanje korisnika
+                
                 HttpResponseMessage korisniciResponse = await client.GetAsync(_apiKorisnikUrl);
                 if (korisniciResponse.IsSuccessStatusCode)
                 {

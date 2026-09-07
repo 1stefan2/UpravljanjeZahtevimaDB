@@ -4,20 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SlojPodataka.Repozitorijumi // Исправљено
+namespace SlojPodataka.Repozitorijumi 
 {
-    public class OsnovniRepozitorijum<T> where T : class // Исправљено
+    public class OsnovniRepozitorijum<T> where T : class 
     {
-        // Polje za konekcioni string (ili DbContext) dostupno svim izvedenim klasama
-        protected readonly string _konekcioniString; // Исправљено
+        
+        protected readonly string _konekcioniString; 
 
-        public OsnovniRepozitorijum(string konekcioniString) // Исправљено
+        public OsnovniRepozitorijum(string konekcioniString) 
         {
             _konekcioniString = konekcioniString;
             
         }
 
-        public virtual T DajPoId(int id) // Исправљено
+        public virtual T DajPoId(int id) 
         {
             throw new NotImplementedException();
         }
@@ -27,12 +27,12 @@ namespace SlojPodataka.Repozitorijumi // Исправљено
             throw new NotImplementedException();
         }
 
-        public virtual void Dodaj(T entitet) // Исправљено
+        public virtual void Dodaj(T entitet) 
         {
             throw new NotImplementedException();
         }
 
-        public virtual void Izmeni(T entitet) // Исправљено
+        public virtual void Izmeni(T entitet) 
         {
             throw new NotImplementedException();
         }

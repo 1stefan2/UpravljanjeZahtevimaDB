@@ -13,7 +13,7 @@ namespace SlojPodataka.Helpers
             _konekcioniString = konekcioniString;
         }
 
-        // Pomoćna metoda za upite koji vraćaju podatke (SELECT -> DataTable)
+        
         public DataTable ExecuteQuery(string procedureName, SqlParameter[] parameters = null)
         {
             DataTable dataTable = new DataTable();
@@ -39,7 +39,7 @@ namespace SlojPodataka.Helpers
             return dataTable;
         }
 
-        // Pomoćna metoda za akcione upite (INSERT, UPDATE, DELETE -> ExecuteNonQuery)
+        
         public int ExecuteNonQuery(string procedureName, SqlParameter[] parameters = null)
         {
             using (SqlConnection connection = new SqlConnection(_konekcioniString))

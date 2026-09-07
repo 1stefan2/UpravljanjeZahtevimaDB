@@ -62,30 +62,30 @@ namespace SlojPodataka.Repozitorijumi
         {
             using (var context = new AppDbContext(_konekcioniString))
             {
-                // 1. Učitavamo postojeći entitet iz baze zajedno sa njegovim stavkama
+                
                 var existingEntity = context.ZahteviZaIzmenom
                     .Include(z => z.Stavke)
                     .FirstOrDefault(z => z.Id == entity.Id);
 
                 if (existingEntity != null)
                 {
-                    // 2. Ažuriramo osnovna polja (zaglavlje / Master)
+                    
                     context.Entry(existingEntity).CurrentValues.SetValues(entity);
 
-                    // 3. Uklanjamo sve stare stavke iz baze
+                    
                     context.StavkeZahteva.RemoveRange(existingEntity.Stavke);
 
-                    // 4. Dodajemo nove stavke koje su stigle sa forme
+                    
                     if (entity.Stavke != null)
                     {
                         foreach (var stavka in entity.Stavke)
                         {
-                            stavka.Id = 0; // Resetujemo ID na 0 da bi EF znao da su ovo novi unosi za insert
+                            stavka.Id = 0; 
                             existingEntity.Stavke.Add(stavka);
                         }
                     }
 
-                    // 5. Čuvamo sve promene u jednoj transakciji
+                   
                     context.SaveChanges();
                 }
             }

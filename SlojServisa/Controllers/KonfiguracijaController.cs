@@ -14,21 +14,21 @@ namespace SlojServisa.Controllers
         {
             try
             {
-                // Putanja do fajla u App_Data folderu
+                
                 string putanjaFajla = HostingEnvironment.MapPath("~/App_Data/poslovna_pravila.json");
 
                 if (!File.Exists(putanjaFajla))
                 {
-                    return NotFound(); // Ako fajl ne postoji
+                    return NotFound(); 
                 }
 
-                // Čitamo ceo sadržaj fajla kao tekst
+                
                 string jsonSadrzaj = File.ReadAllText(putanjaFajla);
 
-                // Parsiramo JSON pomoću Newtonsoft.Json (JObject)
+                
                 JObject jsonObj = JObject.Parse(jsonSadrzaj);
 
-                // Izvlačimo vrednost X prema našoj hijerarhiji
+                
                 int limitSati = jsonObj["pravila_odobrenja"]["limit_sati_za_odobrenje"]?.Value<int>() ?? 40;
 
                 return Ok(new { limit_sati_za_odobrenje = limitSati });

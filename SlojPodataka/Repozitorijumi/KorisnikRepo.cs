@@ -12,7 +12,7 @@ namespace SlojPodataka.Repozitorijumi
         {
         }
 
-        // 1. GetAll (već urađeno, ali evo ga u celoj klasi radi preglednosti)
+        
         public override List<Korisnik> DajSve()
         {
             var korisnici = new List<Korisnik>();
@@ -37,7 +37,7 @@ namespace SlojPodataka.Repozitorijumi
             return korisnici;
         }
 
-        // 2. GetById
+        
         public override Korisnik DajPoId(int id)
         {
             Korisnik korisnik = null;
@@ -64,7 +64,7 @@ namespace SlojPodataka.Repozitorijumi
             return korisnik;
         }
 
-        // 3. Add
+        
         public override void Dodaj(Korisnik entity)
         {
             using (SqlConnection connection = new SqlConnection(_konekcioniString))
@@ -78,11 +78,11 @@ namespace SlojPodataka.Repozitorijumi
                     command.Parameters.AddWithValue("@Ime", entity.Ime);
                     command.Parameters.AddWithValue("@Prezime", entity.Prezime);
                     command.Parameters.AddWithValue("@Uloga", entity.Uloga);
-                    command.Parameters.AddWithValue("@Email", (object)entity.Email ?? DBNull.Value); // Bezbedno prosleđivanje NULL vrednosti
+                    command.Parameters.AddWithValue("@Email", (object)entity.Email ?? DBNull.Value); 
 
                     connection.Open();
 
-                    // Procedura vraća SCOPE_IDENTITY() kao novi ID
+                    
                     object result = command.ExecuteScalar();
                     if (result != null && int.TryParse(result.ToString(), out int newId))
                     {
@@ -92,7 +92,7 @@ namespace SlojPodataka.Repozitorijumi
             }
         }
 
-        // 4. Update
+        
         public override void Izmeni(Korisnik entitet)
         {
             using (SqlConnection connection = new SqlConnection(_konekcioniString))
@@ -115,7 +115,7 @@ namespace SlojPodataka.Repozitorijumi
             }
         }
 
-        // 5. Delete
+       
         public override void Obrisi(int id)
         {
             using (SqlConnection connection = new SqlConnection(_konekcioniString))
@@ -131,7 +131,7 @@ namespace SlojPodataka.Repozitorijumi
             }
         }
 
-        // 6. Specifična metoda: Prijava (Login)
+        
         public Korisnik DajPoKorisnickomImenuILozinci(string korisnickoIme, string lozinka)
         {
             Korisnik korisnik = null;
@@ -160,7 +160,7 @@ namespace SlojPodataka.Repozitorijumi
             return korisnik;
         }
 
-        // Privatna pomoćna metoda za mapiranje redova iz čitača u entitet (DRY princip)
+        
         private Korisnik MapToKorisnik(SqlDataReader reader)
         {
             return new Korisnik

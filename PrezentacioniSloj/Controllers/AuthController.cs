@@ -9,10 +9,8 @@ namespace PrezentacioniSloj.Controllers
 {
     public class AuthController : Controller
     {
-        // HTTPS адреса за безбедну комуникацију (пожељно је извући је у Web.config)
         private readonly string _apiAdresa = "http://localhost:44376/api/korisnik/login";
 
-        // Поновно искоришћавање HttpClient инстанце ради перформанси и спречавања Socket Exhaustion-а
         private static readonly HttpClient _client = KreirajHttpClient();
 
         private static HttpClient KreirajHttpClient()
@@ -20,7 +18,6 @@ namespace PrezentacioniSloj.Controllers
             var handler = new HttpClientHandler();
 
 #if DEBUG
-            // Само током локалног развоја (DEBUG) и искључиво за ову HttpClient инстанцу
             handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 #endif
 

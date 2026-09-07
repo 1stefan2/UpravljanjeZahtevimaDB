@@ -6,13 +6,12 @@ namespace PrezentacioniSloj.ViewModels
 {
     public class KreiranjeZahtevaViewModel
     {
-        // Master deo (osnovni podaci o zahtevu, projektima i statusima)
+        
         public ZahtevZaIzmenomViewModel Zahtev { get; set; } = new ZahtevZaIzmenomViewModel();
 
-        // Detail deo (lista stavki procene radova po fazama)
+        
         public List<StavkaZahtevaViewModel> Stavke { get; set; } = new List<StavkaZahtevaViewModel>();
 
-        // Automatski izračunat zbir svih sati iz stavki (koristi se za proveru poslovnog pravila sa limitom X)
         public decimal UkupnoSati
         {
             get
@@ -21,7 +20,6 @@ namespace PrezentacioniSloj.ViewModels
             }
         }
 
-        // Padajuće liste i izabrani ID-jevi
         public List<SelectListItem> ListaKlijenata { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> ListaKorisnika { get; set; } = new List<SelectListItem>();
         public int IzabranKlijentId { get; set; }

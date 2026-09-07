@@ -18,7 +18,7 @@ namespace PrezentacioniSloj.ViewModels
 
         [Required(ErrorMessage = "Izbor klijenta je obavezan.")]
         public int KlijentId { get; set; }
-        public string NazivKlijenta { get; set; } // Koristi se za tabelarni prikaz
+        public string NazivKlijenta { get; set; } 
 
         [Required(ErrorMessage = "Izbor korisnika je obavezan.")]
         public int KorisnikId { get; set; }
@@ -38,7 +38,7 @@ namespace PrezentacioniSloj.ViewModels
         [Required(ErrorMessage = "Detaljan opis je obavezan.")]
         public string DetaljanOpis { get; set; }
 
-        // --- OPCIONA POLJA (Null? = DA u bazi) ---
+        
         public string PoslovniRazlog { get; set; }
 
         public string UticajNaRok { get; set; }
@@ -48,7 +48,7 @@ namespace PrezentacioniSloj.ViewModels
 
         public bool PotvrdaMenadzera { get; set; }
 
-        // Lista stavki za Master-Detail formu
+        
         public List<StavkaZahtevaViewModel> Stavke { get; set; } = new List<StavkaZahtevaViewModel>();
     }
 }

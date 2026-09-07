@@ -13,7 +13,7 @@ namespace SlojPodataka.Repozitorijumi
 
         public KlijentRepo(string konekcioniString) : base(konekcioniString)
         {
-            // Koristimo nasleđeni _konekcioniString iz OsnovniRepozitorijum klase
+            
             _dbUtils = new DBUtils(_konekcioniString);
         }
 
@@ -55,7 +55,6 @@ namespace SlojPodataka.Repozitorijumi
                 new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
             };
 
-            // Pošto Add vraća novi ID preko SCOPE_IDENTITY(), otvaramo konekciju i pozivamo ExecuteScalar
             using (SqlConnection connection = new SqlConnection(_konekcioniString))
             {
                 using (SqlCommand command = new SqlCommand("spKlijent_Add", connection))

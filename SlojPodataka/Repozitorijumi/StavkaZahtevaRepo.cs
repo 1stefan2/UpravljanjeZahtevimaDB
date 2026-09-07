@@ -13,7 +13,7 @@ namespace SlojPodataka.Repozitorijumi
         {
         }
 
-        // Specifična metoda za Detail entitet
+       
         public List<StavkaZahteva> DajPoIdZahteva(int zahtevId)
         {
             throw new NotImplementedException();
