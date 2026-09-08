@@ -48,26 +48,19 @@ namespace SlojPodataka.Repozitorijumi
         public override void Dodaj(Klijent entitet)
         {
             SqlParameter[] parametri = {
-                new SqlParameter("@NazivFirme", entitet.NazivFirme),
-                new SqlParameter("@Kontakt", entitet.Kontakt),
-                new SqlParameter("@Telefon", (object)entitet.Telefon ?? DBNull.Value),
-                new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
-            };
+        new SqlParameter("@NazivFirme", entitet.NazivFirme),
+        new SqlParameter("@Kontakt", entitet.Kontakt),
+        new SqlParameter("@Telefon", (object)entitet.Telefon ?? DBNull.Value),
+        new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
+    };
 
-            using (SqlConnection konekcija = new SqlConnection(_konekcioniString))
+            // Pozivamo novu metodu iz DBUtils
+            object rezultat = IzvrsiSkalar("spKlijent_Add", parametri);
+
+            // Dodeljujemo dobijeni ID entitetu
+            if (rezultat != null && int.TryParse(rezultat.ToString(), out int noviId))
             {
-                using (SqlCommand komanda = new SqlCommand("spKlijent_Add", konekcija))
-                {
-                    komanda.CommandType = CommandType.StoredProcedure;
-                    komanda.Parameters.AddRange(parametri);
-
-                    konekcija.Open();
-                    object rezultat = komanda.ExecuteScalar();
-                    if (rezultat != null && int.TryParse(rezultat.ToString(), out int noviId))
-                    {
-                        entitet.Id = noviId;
-                    }
-                }
+                entitet.Id = noviId;
             }
         }
 

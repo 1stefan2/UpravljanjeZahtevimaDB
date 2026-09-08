@@ -54,5 +54,23 @@ namespace SlojPodataka.Helpers
                 }
             }
         }
+        public object IzvrsiSkalar(string nazivProcedure, SqlParameter[] parametri = null)
+        {
+            using (SqlConnection konekcija = new SqlConnection(_konekcioniString))
+            {
+                using (SqlCommand komanda = new SqlCommand(nazivProcedure, konekcija))
+                {
+                    komanda.CommandType = CommandType.StoredProcedure;
+
+                    if (parametri != null)
+                    {
+                        komanda.Parameters.AddRange(parametri);
+                    }
+
+                    konekcija.Open();
+                    return komanda.ExecuteScalar();
+                }
+            }
+        }
     }
 }
