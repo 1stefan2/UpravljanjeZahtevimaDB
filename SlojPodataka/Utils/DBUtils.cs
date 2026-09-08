@@ -1,16 +1,14 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using SlojPodataka.Repozitorijumi;
 
 namespace SlojPodataka.Helpers
 {
-    public class DBUtils
+    public abstract class DBUtils<T> : OsnovniRepozitorijum<T> where T : class
     {
         
-        protected readonly string _konekcioniString;
-
-        public DBUtils(string konekcioniString)
+        protected DBUtils(string konekcioniString) : base(konekcioniString)
         {
-            _konekcioniString = konekcioniString;
         }
 
         public DataTable IzvrsiUpit(string nazivProcedure, SqlParameter[] parametri = null)

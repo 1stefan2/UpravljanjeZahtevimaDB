@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SlojPodataka.Entities;
+using SlojPodataka.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using SlojPodataka.Entities;
 
 namespace SlojPodataka.Repozitorijumi
 {
-    public class KlijentRepo : OsnovniRepozitorijum<Klijent>
+    public class KlijentRepo : DBUtils<Klijent>
     {
         public KlijentRepo(string konekcioniString) : base(konekcioniString)
         {

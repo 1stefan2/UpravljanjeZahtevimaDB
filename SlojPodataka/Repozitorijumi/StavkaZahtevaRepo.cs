@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SlojPodataka.Entities; 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using SlojPodataka.Entities; 
+using SlojPodataka.Helpers;
 
 namespace SlojPodataka.Repozitorijumi
 {
-    public class StavkaZahtevaRepo : OsnovniRepozitorijum<StavkaZahteva>
+    public class StavkaZahtevaRepo : DBUtils<StavkaZahteva>
     {
         public StavkaZahtevaRepo(string konekcioniString) : base(konekcioniString)
         {
