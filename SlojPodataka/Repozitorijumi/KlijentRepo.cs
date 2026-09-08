@@ -54,10 +54,10 @@ namespace SlojPodataka.Repozitorijumi
         new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
     };
 
-            // Pozivamo novu metodu iz DBUtils
+            
             object rezultat = IzvrsiSkalar("spKlijent_Add", parametri);
 
-            // Dodeljujemo dobijeni ID entitetu
+            
             if (rezultat != null && int.TryParse(rezultat.ToString(), out int noviId))
             {
                 entitet.Id = noviId;
