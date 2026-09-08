@@ -41,6 +41,7 @@ namespace PoslovnaLogika
             {
                 var stavke = _stavkaRepo.DajPoIdZahteva(zahtevId);
                 ukupnoSati = stavke?.Sum(s => s.ProcenjeniSati) ?? 0;
+
             }
 
             if ((status == "У реализацији" || status == "U realizaciji") && ukupnoSati > limitSati && !potvrdaMenadzera)

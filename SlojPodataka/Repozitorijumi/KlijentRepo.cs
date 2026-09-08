@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using SlojPodataka.Entities;
-using SlojPodataka.Helpers;
 
 namespace SlojPodataka.Repozitorijumi
 {
     public class KlijentRepo : OsnovniRepozitorijum<Klijent>
     {
-        private readonly DBUtils _dbUtils;
-
         public KlijentRepo(string konekcioniString) : base(konekcioniString)
         {
-            
-            _dbUtils = new DBUtils(_konekcioniString);
+            // Поље _dbUtils је уклоњено, а конструктор само прослеђује стринг родитељу
         }
 
         public override List<Klijent> DajSve()
         {
             var klijenti = new List<Klijent>();
-            DataTable table = _dbUtils.ExecuteQuery("spKlijent_GetAll");
 
-            foreach (DataRow row in table.Rows)
+            
+            DataTable tabela = IzvrsiUpit("spKlijent_GetAll");
+
+            foreach (DataRow red in tabela.Rows)
             {
-                klijenti.Add(MapirajRedUKlijent(row));
+                klijenti.Add(MapirajRedUKlijent(red));
             }
 
             return klijenti;
@@ -32,15 +30,15 @@ namespace SlojPodataka.Repozitorijumi
 
         public override Klijent DajPoId(int id)
         {
-            SqlParameter[] parameters = {
+            SqlParameter[] parametri = {
                 new SqlParameter("@Id", id)
             };
 
-            DataTable table = _dbUtils.ExecuteQuery("spKlijent_GetById", parameters);
+            DataTable tabela = IzvrsiUpit("spKlijent_GetById", parametri);
 
-            if (table.Rows.Count > 0)
+            if (tabela.Rows.Count > 0)
             {
-                return MapirajRedUKlijent(table.Rows[0]);
+                return MapirajRedUKlijent(tabela.Rows[0]);
             }
 
             return null;
@@ -48,61 +46,62 @@ namespace SlojPodataka.Repozitorijumi
 
         public override void Dodaj(Klijent entitet)
         {
-            SqlParameter[] parameters = {
+            SqlParameter[] parametri = {
                 new SqlParameter("@NazivFirme", entitet.NazivFirme),
                 new SqlParameter("@Kontakt", entitet.Kontakt),
                 new SqlParameter("@Telefon", (object)entitet.Telefon ?? DBNull.Value),
                 new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
             };
 
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            using (SqlConnection konekcija = new SqlConnection(_konekcioniString))
             {
-                using (SqlCommand command = new SqlCommand("spKlijent_Add", connection))
+                using (SqlCommand komanda = new SqlCommand("spKlijent_Add", konekcija))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddRange(parameters);
+                    komanda.CommandType = CommandType.StoredProcedure;
+                    komanda.Parameters.AddRange(parametri);
 
-                    connection.Open();
-                    object result = command.ExecuteScalar();
-                    if (result != null && int.TryParse(result.ToString(), out int newId))
+                    konekcija.Open();
+                    object rezultat = komanda.ExecuteScalar();
+                    if (rezultat != null && int.TryParse(rezultat.ToString(), out int noviId))
                     {
-                        entitet.Id = newId;
+                        entitet.Id = noviId;
                     }
                 }
             }
         }
 
-        public override void Izmeni(Klijent entity)
+        public override void Izmeni(Klijent entitet)
         {
-            SqlParameter[] parameters = {
-                new SqlParameter("@Id", entity.Id),
-                new SqlParameter("@Naziv", entity.NazivFirme),
-                new SqlParameter("@Kontakt", entity.Kontakt),
-                new SqlParameter("@Telefon", (object)entity.Telefon ?? DBNull.Value),
-                new SqlParameter("@Email", (object)entity.Email ?? DBNull.Value)
+            SqlParameter[] parametri = {
+                new SqlParameter("@Id", entitet.Id),
+                new SqlParameter("@Naziv", entitet.NazivFirme),
+                new SqlParameter("@Kontakt", entitet.Kontakt),
+                new SqlParameter("@Telefon", (object)entitet.Telefon ?? DBNull.Value),
+                new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
             };
 
-            _dbUtils.ExecuteNonQuery("spKlijent_Update", parameters);
+            
+            IzvrsiKomandu("spKlijent_Update", parametri);
         }
 
         public override void Obrisi(int id)
         {
-            SqlParameter[] parameters = {
+            SqlParameter[] parametri = {
                 new SqlParameter("@Id", id)
             };
 
-            _dbUtils.ExecuteNonQuery("spKlijent_Delete", parameters);
+            IzvrsiKomandu("spKlijent_Delete", parametri);
         }
 
-        private Klijent MapirajRedUKlijent(DataRow row)
+        private Klijent MapirajRedUKlijent(DataRow red)
         {
             return new Klijent
             {
-                Id = Convert.ToInt32(row["Id"]),
-                NazivFirme = row["NazivFirme"].ToString(),
-                Kontakt = row["Kontakt"].ToString(),
-                Telefon = row["Telefon"] == DBNull.Value ? null : row["Telefon"].ToString(),
-                Email = row["Email"] == DBNull.Value ? null : row["Email"].ToString()
+                Id = Convert.ToInt32(red["Id"]),
+                NazivFirme = red["NazivFirme"].ToString(),
+                Kontakt = red["Kontakt"].ToString(),
+                Telefon = red["Telefon"] == DBNull.Value ? null : red["Telefon"].ToString(),
+                Email = red["Email"] == DBNull.Value ? null : red["Email"].ToString()
             };
         }
     }

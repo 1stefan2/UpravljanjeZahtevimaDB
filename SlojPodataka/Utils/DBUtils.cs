@@ -1,60 +1,58 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 
 namespace SlojPodataka.Helpers
 {
     public class DBUtils
     {
-        private readonly string _konekcioniString;
+        
+        protected readonly string _konekcioniString;
 
         public DBUtils(string konekcioniString)
         {
             _konekcioniString = konekcioniString;
         }
 
-        
-        public DataTable ExecuteQuery(string procedureName, SqlParameter[] parameters = null)
+        public DataTable IzvrsiUpit(string nazivProcedure, SqlParameter[] parametri = null)
         {
-            DataTable dataTable = new DataTable();
+            DataTable tabela = new DataTable();
 
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            using (SqlConnection konekcija = new SqlConnection(_konekcioniString))
             {
-                using (SqlCommand command = new SqlCommand(procedureName, connection))
+                using (SqlCommand komanda = new SqlCommand(nazivProcedure, konekcija))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    komanda.CommandType = CommandType.StoredProcedure;
 
-                    if (parameters != null)
+                    if (parametri != null)
                     {
-                        command.Parameters.AddRange(parameters);
+                        komanda.Parameters.AddRange(parametri);
                     }
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(komanda))
                     {
-                        adapter.Fill(dataTable);
+                        adapter.Fill(tabela);
                     }
                 }
             }
 
-            return dataTable;
+            return tabela;
         }
 
-        
-        public int ExecuteNonQuery(string procedureName, SqlParameter[] parameters = null)
+        public int IzvrsiKomandu(string nazivProcedure, SqlParameter[] parametri = null)
         {
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            using (SqlConnection konekcija = new SqlConnection(_konekcioniString))
             {
-                using (SqlCommand command = new SqlCommand(procedureName, connection))
+                using (SqlCommand komanda = new SqlCommand(nazivProcedure, konekcija))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    komanda.CommandType = CommandType.StoredProcedure;
 
-                    if (parameters != null)
+                    if (parametri != null)
                     {
-                        command.Parameters.AddRange(parameters);
+                        komanda.Parameters.AddRange(parametri);
                     }
 
-                    connection.Open();
-                    return command.ExecuteNonQuery();
+                    konekcija.Open();
+                    return komanda.ExecuteNonQuery();
                 }
             }
         }
