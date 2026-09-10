@@ -3,175 +3,127 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using SlojPodataka.Entities;
+using SlojPodataka.PomocneKlase; 
 
 namespace SlojPodataka.Repozitorijumi
 {
     public class KorisnikRepo : OsnovniRepozitorijum<Korisnik>
     {
+        private readonly SkladistenaProcedurama _skladistena;
+
         public KorisnikRepo(string konekcioniString) : base(konekcioniString)
         {
+           
+            _skladistena = new SkladistenaProcedurama(konekcioniString);
         }
 
-        
         public override List<Korisnik> DajSve()
         {
             var korisnici = new List<Korisnik>();
+            DataTable dt = _skladistena.IzvrsiUpit("spKorisnik_GetAll");
 
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            foreach (DataRow row in dt.Rows)
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_GetAll", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            korisnici.Add(MapToKorisnik(reader));
-                        }
-                    }
-                }
+                korisnici.Add(MapToKorisnik(row));
             }
 
             return korisnici;
         }
 
-        
         public override Korisnik DajPoId(int id)
         {
-            Korisnik korisnik = null;
-
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            SqlParameter[] parametri = new SqlParameter[]
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_GetById", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Id", id);
+                new SqlParameter("@Id", id)
+            };
 
-                    connection.Open();
+            DataTable dt = _skladistena.IzvrsiUpit("spKorisnik_GetById", parametri);
 
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            korisnik = MapToKorisnik(reader);
-                        }
-                    }
-                }
+            if (dt.Rows.Count > 0)
+            {
+                return MapToKorisnik(dt.Rows[0]);
             }
 
-            return korisnik;
+            return null;
         }
 
-        
         public override void Dodaj(Korisnik entity)
         {
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            SqlParameter[] parametri = new SqlParameter[]
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_Add", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+                new SqlParameter("@KorisnickoIme", entity.KorisnickoIme),
+                new SqlParameter("@Lozinka", entity.Lozinka),
+                new SqlParameter("@Ime", entity.Ime),
+                new SqlParameter("@Prezime", entity.Prezime),
+                new SqlParameter("@Uloga", entity.Uloga),
+                new SqlParameter("@Email", (object)entity.Email ?? DBNull.Value)
+            };
 
-                    command.Parameters.AddWithValue("@KorisnickoIme", entity.KorisnickoIme);
-                    command.Parameters.AddWithValue("@Lozinka", entity.Lozinka);
-                    command.Parameters.AddWithValue("@Ime", entity.Ime);
-                    command.Parameters.AddWithValue("@Prezime", entity.Prezime);
-                    command.Parameters.AddWithValue("@Uloga", entity.Uloga);
-                    command.Parameters.AddWithValue("@Email", (object)entity.Email ?? DBNull.Value); 
+            
+            DataTable dt = _skladistena.IzvrsiUpit("spKorisnik_Add", parametri);
 
-                    connection.Open();
-
-                    
-                    object result = command.ExecuteScalar();
-                    if (result != null && int.TryParse(result.ToString(), out int newId))
-                    {
-                        entity.Id = newId;
-                    }
-                }
+            if (dt.Rows.Count > 0 && int.TryParse(dt.Rows[0][0].ToString(), out int newId))
+            {
+                entity.Id = newId;
             }
         }
 
-        
         public override void Izmeni(Korisnik entitet)
         {
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            SqlParameter[] parametri = new SqlParameter[]
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_Update", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+                new SqlParameter("@Id", entitet.Id),
+                new SqlParameter("@KorisnickoIme", entitet.KorisnickoIme),
+                new SqlParameter("@Lozinka", entitet.Lozinka),
+                new SqlParameter("@Ime", entitet.Ime),
+                new SqlParameter("@Prezime", entitet.Prezime),
+                new SqlParameter("@Uloga", entitet.Uloga),
+                new SqlParameter("@Email", (object)entitet.Email ?? DBNull.Value)
+            };
 
-                    command.Parameters.AddWithValue("@Id", entitet.Id);
-                    command.Parameters.AddWithValue("@KorisnickoIme", entitet.KorisnickoIme);
-                    command.Parameters.AddWithValue("@Lozinka", entitet.Lozinka);
-                    command.Parameters.AddWithValue("@Ime", entitet.Ime);
-                    command.Parameters.AddWithValue("@Prezime", entitet.Prezime);
-                    command.Parameters.AddWithValue("@Uloga", entitet.Uloga);
-                    command.Parameters.AddWithValue("@Email", (object)entitet.Email ?? DBNull.Value);
-
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
+            _skladistena.IzvrsiKomandu("spKorisnik_Update", parametri);
         }
 
-       
         public override void Obrisi(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            SqlParameter[] parametri = new SqlParameter[]
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_Delete", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@Id", id);
+                new SqlParameter("@Id", id)
+            };
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
+            _skladistena.IzvrsiKomandu("spKorisnik_Delete", parametri);
         }
 
-        
         public Korisnik DajPoKorisnickomImenuILozinci(string korisnickoIme, string lozinka)
         {
-            Korisnik korisnik = null;
-
-            using (SqlConnection connection = new SqlConnection(_konekcioniString))
+            SqlParameter[] parametri = new SqlParameter[]
             {
-                using (SqlCommand command = new SqlCommand("spKorisnik_Prijava", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+                new SqlParameter("@KorisnickoIme", korisnickoIme),
+                new SqlParameter("@Lozinka", lozinka)
+            };
 
-                    command.Parameters.AddWithValue("@KorisnickoIme", korisnickoIme);
-                    command.Parameters.AddWithValue("@Lozinka", lozinka);
+            DataTable dt = _skladistena.IzvrsiUpit("spKorisnik_Prijava", parametri);
 
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            korisnik = MapToKorisnik(reader);
-                        }
-                    }
-                }
+            if (dt.Rows.Count > 0)
+            {
+                return MapToKorisnik(dt.Rows[0]);
             }
 
-            return korisnik;
+            return null;
         }
 
-        
-        private Korisnik MapToKorisnik(SqlDataReader reader)
+        // Metoda sada mapira iz DataRow objekta umesto iz SqlDataReader-a
+        private Korisnik MapToKorisnik(DataRow row)
         {
             return new Korisnik
             {
-                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                KorisnickoIme = reader.GetString(reader.GetOrdinal("KorisnickoIme")),
-                Lozinka = reader.GetString(reader.GetOrdinal("Lozinka")),
-                Ime = reader.GetString(reader.GetOrdinal("Ime")),
-                Prezime = reader.GetString(reader.GetOrdinal("Prezime")),
-                Uloga = reader.GetString(reader.GetOrdinal("Uloga")),
-                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"))
+                Id = Convert.ToInt32(row["Id"]),
+                KorisnickoIme = row["KorisnickoIme"].ToString(),
+                Lozinka = row["Lozinka"].ToString(),
+                Ime = row["Ime"].ToString(),
+                Prezime = row["Prezime"].ToString(),
+                Uloga = row["Uloga"].ToString(),
+                Email = row["Email"] == DBNull.Value ? null : row["Email"].ToString()
             };
         }
     }

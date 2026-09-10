@@ -56,6 +56,7 @@
     <Compile Include="Modeli\Korisnik.cs" />
     <Compile Include="Modeli\StavkaZahteva.cs" />
     <Compile Include="Modeli\ZahtevZaIzmenom.cs" />
+    <Compile Include="PomocneKlase\SkladistenaProcedurama.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repozitorijumi\OsnovniRepozitorijum.cs" />
     <Compile Include="Repozitorijumi\KlijentRepo.cs" />
