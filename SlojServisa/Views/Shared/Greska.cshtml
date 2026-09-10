@@ -1,13 +1,59 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Greska</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greška u sistemu - CRF Servis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .kontejner-greske {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #dc3545;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #6c757d;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .dugme-pocetna {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+            .dugme-pocetna:hover {
+                background-color: #0056b3;
+            }
+    </style>
 </head>
 <body>
-    <hgroup>
-        <h1>Greska.</h1>
-        <h2>Greska se pojavila.</h2>
-    </hgroup>
+    <div class="kontejner-greske">
+        <h1>Došlo je do neočekivane greške</h1>
+        <p>Izvinjavamo se, ali sistem nije u mogućnosti da obradi vaš zahtev u ovom trenutku. Molimo vas da pokušate ponovo kasnije ili se vratite na početnu stranicu.</p>
+        <a href="~/" class="dugme-pocetna">Nazad na početnu</a>
+    </div>
 </body>
 </html>
