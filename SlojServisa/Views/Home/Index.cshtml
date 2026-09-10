@@ -1,26 +1,20 @@
 ﻿<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="aspnetTitle">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+    <section class="row" aria-labelledby="naslovProjekta">
+        <h1 id="naslovProjekta">REST API Servis - Upravljanje Zahtevima</h1>
+        <p class="lead">Ovo je osnovni sloj servisa zadužen za komunikaciju između klijentske aplikacije i sloja podataka (baze).</p>
     </section>
     <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-            a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-            is an ideal platform for building RESTful applications on the .NET Framework.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
+        <section class="col-md-4" aria-labelledby="apiKrajnjeTacke">
+            <h2 id="apiKrajnjeTacke">API Krajnje Tačke</h2>
+            <p>Servis obezbeđuje RESTful rute (HTTP GET, POST, PUT, DELETE) za rad sa klijentima, stavkama i zahtevima za izmenom (CRF).</p>
         </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
+        <section class="col-md-4" aria-labelledby="formatPodataka">
+            <h2 id="formatPodataka">Format Podataka</h2>
+            <p>Sva razmena podataka sa prezentacionim slojem vrši se isključivo u standardizovanom JSON formatu.</p>
         </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-        </section>>
+        <section class="col-md-4" aria-labelledby="arhitektura">
+            <h2 id="arhitektura">Višeslojna Arhitektura</h2>
+            <p>Ovaj sloj poziva repozitorijume iz sloja podataka, čime je poslovna logika potpuno odvojena od korisničkog interfejsa.</p>
+        </section>
     </div>
 </main>
